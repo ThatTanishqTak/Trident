@@ -35,7 +35,7 @@ cmake -DCMAKE_BUILD_TYPE=%BUILD_TYPE% ..
 
 :: Build the project
 echo Building project...
-cmake --build .
+cmake --build . --config %BUILD_TYPE%
 
 echo ======================================
 echo Build finished (%BUILD_TYPE%).

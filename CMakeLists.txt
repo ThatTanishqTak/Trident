@@ -12,8 +12,13 @@ else()
 endif()
 
 # Build‐folder naming: e.g. windows-Debug-amd64
-string(TOLOWER ${CMAKE_SYSTEM_NAME} OS_NAME)
-string(TOLOWER ${CMAKE_SYSTEM_PROCESSOR} ARCH)
+set(OS_NAME ${CMAKE_SYSTEM_NAME})
+if(CMAKE_SIZEOF_VOID_P EQUAL 8)
+    set(ARCH "x64")
+else()
+    set(ARCH "x86")
+endif()
+
 set(OUTPUT_DIR "${OS_NAME}-${OUTPUT_CONFIG}-${ARCH}")
 
 # Final binary output
@@ -26,9 +31,9 @@ set(GLFW_BUILD_DOCS    OFF CACHE BOOL "" FORCE)
 set(GLFW_BUILD_TESTS   OFF CACHE BOOL "" FORCE)
 set(GLFW_BUILD_EXAMPLES OFF CACHE BOOL "" FORCE)
 
-# Pull in GLFW
-add_subdirectory(${CMAKE_SOURCE_DIR}/Trident/vendor/glfw)
-
 # Pull in your two projects
 add_subdirectory(Trident)
 add_subdirectory(Forge)
+
+# Pull in GLFW
+add_subdirectory(${CMAKE_SOURCE_DIR}/Trident/vendor/glfw)
