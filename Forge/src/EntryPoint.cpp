@@ -38,7 +38,7 @@ int main()
     while (!glfwWindowShouldClose(window))
     {
         // Set background color and clear
-        glClearColor(0.1f, 0.1f, 0.2f, 1.0f);
+        glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT);
 
         // Poll for and process events
