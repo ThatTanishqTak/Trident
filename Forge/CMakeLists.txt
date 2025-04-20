@@ -15,14 +15,18 @@ set(OUTPUT_DIR "${OS_NAME}-$<CONFIG>-${ARCH}")
 
 # Create Forge executable based on build type
 # Only add WIN32 for Release on MSVC
+
+# Recursively collect all .cpp and .h files in src/
+file(GLOB_RECURSE FORGE_SOURCES CONFIGURE_DEPENDS src/*.cpp src/*.h)
+
 if (MSVC)
     if (CMAKE_BUILD_TYPE STREQUAL "Release")
-        add_executable(Forge WIN32 src/EntryPoint.cpp)
+        add_executable(Forge WIN32 ${FORGE_SOURCES})
     else()
-        add_executable(Forge src/EntryPoint.cpp)
+        add_executable(Forge ${FORGE_SOURCES})
     endif()
 else()
-    add_executable(Forge src/EntryPoint.cpp)
+    add_executable(Forge ${FORGE_SOURCES})
 endif()
 
 # Include Trident engine headers

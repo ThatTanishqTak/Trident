@@ -8,11 +8,13 @@ target_include_directories(glad PUBLIC
   ${CMAKE_CURRENT_SOURCE_DIR}/vendor/glad/include
 )
 
-# Your engine core
-add_library(Trident STATIC
-    src/Core/Core.cpp
-    src/Core/Core.h
-)
+file(GLOB_RECURSE TRIDENT_SOURCES CONFIGURE_DEPENDS src/*.cpp src/*.h)
+
+# Engine core
+add_library(Trident STATIC ${TRIDENT_SOURCES})
+
+# Precompiled header setup
+target_precompile_headers(Trident PRIVATE src/Core/Core.h)
 
 target_include_directories(Trident PUBLIC
     ${CMAKE_CURRENT_SOURCE_DIR}/src
