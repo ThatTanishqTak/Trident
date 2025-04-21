@@ -32,6 +32,13 @@ namespace Engine
         // Make the window's context current
         glfwMakeContextCurrent(m_Window);
 
+        // Load OpenGL functions with GLAD
+        if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress))
+        {
+            std::cerr << "Failed to initialize GLAD!" << std::endl;
+            return;
+        }
+
         // Enable V-Sync
         glfwSwapInterval(1);
     }

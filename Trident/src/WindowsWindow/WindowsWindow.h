@@ -1,7 +1,6 @@
 #pragma once
 
 #include "Core/Core.h"
-#include <GLFW/glfw3.h>
 
 namespace Engine
 {
@@ -9,7 +8,7 @@ namespace Engine
     class WindowsWindow
     {
     public:
-        GLFWwindow* GetWindow() const { return m_Window; } // Accessor for internal window pointer
+        GLFWwindow* GetWindow() { return m_Window; } // Accessor for internal window pointer
 
         void Init();     // Initializes the GLFW window
         void Shutdown(); // Cleans up GLFW resources

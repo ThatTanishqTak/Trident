@@ -13,7 +13,7 @@ Application::~Application()
 void Application::Run()
 {
     // Main loop runs while the window is open
-    while (m_Window.GetWindow())
+    while (!glfwWindowShouldClose(m_Window.GetWindow()))
     {
         m_Window.Run(); // Render and process events
     }
