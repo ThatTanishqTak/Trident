@@ -1,3 +1,6 @@
 [submodule "Trident/vendor/glfw"]
 	path = Trident/vendor/glfw
 	url = https://github.com/ThatTanishqTak/glfw.git
+[submodule "Trident/vendor/glm"]
+	path = Trident/vendor/glm
+	url = https://github.com/ThatTanishqTak/glm.git
