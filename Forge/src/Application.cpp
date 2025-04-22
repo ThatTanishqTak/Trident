@@ -15,16 +15,29 @@ void Application::Run()
     // Main loop runs while the window is open
     while (!glfwWindowShouldClose(m_Window.GetWindow()))
     {
-        m_Window.Run(); // Render and process events
+        // Set background color and clear
+        glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
+        glClear(GL_COLOR_BUFFER_BIT);
+
+        // Render scene
+        m_Renderer.Render();
+
+        // Poll for and process events
+        glfwPollEvents();
+
+        // Swap front and back buffers
+        glfwSwapBuffers(m_Window.GetWindow());
     }
 }
 
 void Application::Init()
 {
     m_Window.Init(); // Initialize the window
+    m_Renderer.Init();
 }
 
 void Application::Shutdown()
 {
+    m_Renderer.Shutdown();
     m_Window.Shutdown(); // Clean up the window
 }

@@ -12,7 +12,7 @@
 #include <utility>
 #include <functional>
 
-// GLAD/ OpenGL / GLFW
+// GLAD / OpenGL / GLFW
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
 

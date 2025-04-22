@@ -9,11 +9,11 @@ namespace Engine
         {
             std::cerr << "Failed to initialize GLFW!" << std::endl;
 
-            //return -1;
+            return;
         }
 
         // Set OpenGL version (Optional: Only needed if you're using modern OpenGL)
-        glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
+        glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
         glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
         glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
         // For macOS uncomment the next line
@@ -26,7 +26,7 @@ namespace Engine
             std::cerr << "Failed to create GLFW window!" << std::endl;
             glfwTerminate();
 
-            //return -1;
+            return;
         }
 
         // Make the window's context current
@@ -36,6 +36,7 @@ namespace Engine
         if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress))
         {
             std::cerr << "Failed to initialize GLAD!" << std::endl;
+            
             return;
         }
 
@@ -48,18 +49,5 @@ namespace Engine
         // Cleanup
         glfwDestroyWindow(m_Window);
         glfwTerminate();
-    }
-
-    void WindowsWindow::Run()
-    {
-        // Set background color and clear
-        glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
-        glClear(GL_COLOR_BUFFER_BIT);
-
-        // Poll for and process events
-        glfwPollEvents();
-
-        // Swap front and back buffers
-        glfwSwapBuffers(m_Window);
     }
 }

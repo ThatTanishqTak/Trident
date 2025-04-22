@@ -2,6 +2,7 @@
 
 #include "Core/Core.h"
 #include "WindowsWindow/WindowsWindow.h"
+#include "Renderer/Renderer.h"
 
 #include <iostream>
 
@@ -16,6 +17,7 @@ public:
 
 private:
     Engine::WindowsWindow m_Window; // The main application window
+    Engine::Renderer m_Renderer; // The main application window
 
     void Init();     // Initializes resources and systems
     void Shutdown(); // Cleans up resources and systems
