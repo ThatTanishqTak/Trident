@@ -20,7 +20,7 @@ namespace Engine
         // glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
 
         // Create a windowed mode window and its OpenGL context
-        m_Window = glfwCreateWindow(1920, 1080, "Forge", nullptr, nullptr);
+        m_Window = glfwCreateWindow(1920, 1080, "Trident-Forge", nullptr, nullptr);
         if (!m_Window)
         {
             std::cerr << "Failed to create GLFW window!" << std::endl;
@@ -28,7 +28,7 @@ namespace Engine
 
             return;
         }
-        std::cout << "Window initialization successfull" << std::endl;
+        std::cout << "Window initialization successful" << std::endl;
 
         // Make the window's context current
         glfwMakeContextCurrent(m_Window);
@@ -40,7 +40,7 @@ namespace Engine
             
             return;
         }
-        std::cout << "GLAD initialization successfull" << std::endl;
+        std::cout << "GLAD initialization successful" << std::endl;
 
         // Enable V-Sync
         glfwSwapInterval(1);
@@ -53,6 +53,6 @@ namespace Engine
         glfwDestroyWindow(m_Window);
         glfwTerminate();
 
-        std::cout << "Window clean up successfull" << std::endl;
+        std::cout << "Window clean up successful" << std::endl;
     }
 }
