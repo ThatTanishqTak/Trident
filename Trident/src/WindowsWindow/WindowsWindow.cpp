@@ -28,6 +28,7 @@ namespace Engine
 
             return;
         }
+        std::cout << "Window initialization successfull" << std::endl;
 
         // Make the window's context current
         glfwMakeContextCurrent(m_Window);
@@ -39,9 +40,11 @@ namespace Engine
             
             return;
         }
+        std::cout << "GLAD initialization successfull" << std::endl;
 
         // Enable V-Sync
         glfwSwapInterval(1);
+        std::cout << "V-Sync enabled" << std::endl;
     }
 
     void WindowsWindow::Shutdown()
@@ -49,5 +52,7 @@ namespace Engine
         // Cleanup
         glfwDestroyWindow(m_Window);
         glfwTerminate();
+
+        std::cout << "Window clean up successfull" << std::endl;
     }
 }

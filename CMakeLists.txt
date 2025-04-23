@@ -33,7 +33,7 @@ set(GLFW_BUILD_EXAMPLES OFF CACHE BOOL "" FORCE)
 
 # Pull in your two projects
 add_subdirectory(Trident)
-add_subdirectory(Forge)
+add_subdirectory(Trident-Forge)
 
 # Pull in GLFW
 add_subdirectory(${CMAKE_SOURCE_DIR}/Trident/vendor/glfw)

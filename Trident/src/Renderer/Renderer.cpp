@@ -13,7 +13,7 @@ namespace Engine
 
     Renderer::~Renderer()
     {
-        Shutdown();
+
     }
 
     void Renderer::Init()
@@ -29,18 +29,22 @@ namespace Engine
         // Generate and bind VAO
         glGenVertexArrays(1, &m_VAO);
         glBindVertexArray(m_VAO);
+        std::cout << "VAO generated and binded successfully" << std::endl;
 
         // Generate and bind VBO
         glGenBuffers(1, &m_VBO);
         glBindBuffer(GL_ARRAY_BUFFER, m_VBO);
         glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
+        std::cout << "VBO generated and binded successfully" << std::endl;
 
         // Vertex attribute pointers
         glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
         glEnableVertexAttribArray(0);
+        std::cout << "Vertex attribute pointers generated successfully" << std::endl;
 
         // Load and compile shaders
         m_Shader = new Shader("Shaders/Basic.vert", "Shaders/Basic.frag");
+        std::cout << "Shaders loaded successfully" << std::endl;
 
         // Unbind everything
         glBindBuffer(GL_ARRAY_BUFFER, 0);
@@ -65,5 +69,7 @@ namespace Engine
 
         glDeleteVertexArrays(1, &m_VAO);
         glDeleteBuffers(1, &m_VBO);
+
+        std::cout << "Renderer clean up successfull" << std::endl;
     }
 }

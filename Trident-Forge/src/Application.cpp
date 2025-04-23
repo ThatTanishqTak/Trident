@@ -33,11 +33,11 @@ void Application::Run()
 void Application::Init()
 {
     m_Window.Init(); // Initialize the window
-    m_Renderer.Init();
+    m_Renderer.Init(); // Initialize the renderer
 }
 
 void Application::Shutdown()
 {
-    m_Renderer.Shutdown();
+    m_Renderer.Shutdown(); // Clean up the renderer
     m_Window.Shutdown(); // Clean up the window
 }

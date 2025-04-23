@@ -1,4 +1,4 @@
-project(Forge)
+project(Trident-Forge)
 
 # Detect and set output directory variables
 set(OS_NAME ${CMAKE_SYSTEM_NAME})
@@ -14,47 +14,47 @@ endif()
 set(OUTPUT_DIR "${OS_NAME}-$<CONFIG>-${ARCH}")
 
 # Recursively collect all .cpp and .h files in src/
-file(GLOB_RECURSE FORGE_SOURCES CONFIGURE_DEPENDS src/*.cpp src/*.h)
+file(GLOB_RECURSE Trident-Forge_SOURCES CONFIGURE_DEPENDS src/*.cpp src/*.h)
 
-# Create Forge executable based on build type
+# Create Trident-Forge executable based on build type
 # Only add WIN32 for Release on MSVC
 if (MSVC)
     if (CMAKE_BUILD_TYPE STREQUAL "Release")
-        add_executable(Forge WIN32 ${FORGE_SOURCES})
+        add_executable(Trident-Forge WIN32 ${Trident-Forge_SOURCES})
     else()
-        add_executable(Forge ${FORGE_SOURCES})
+        add_executable(Trident-Forge ${Trident-Forge_SOURCES})
     endif()
 else()
-    add_executable(Forge ${FORGE_SOURCES})
+    add_executable(Trident-Forge ${Trident-Forge_SOURCES})
 endif()
 
 # Include Trident engine headers
-target_include_directories(Forge PRIVATE ${CMAKE_SOURCE_DIR}/Trident/src)
+target_include_directories(Trident-Forge PRIVATE ${CMAKE_SOURCE_DIR}/Trident/src)
 
 # Link to Trident engine
-target_link_libraries(Forge PRIVATE Trident)
+target_link_libraries(Trident-Forge PRIVATE Trident)
 
 # Apply release-only linker flags for GUI entry point
 if (MSVC)
-    set_target_properties(Forge PROPERTIES
+    set_target_properties(Trident-Forge PROPERTIES
         LINK_FLAGS_RELEASE "/SUBSYSTEM:WINDOWS /ENTRY:mainCRTStartup"
     )
 endif()
 
 # Object file output location (MSVC only)
-target_compile_options(Forge PRIVATE
-    $<$<CXX_COMPILER_ID:MSVC>:/Fo"${CMAKE_SOURCE_DIR}/bin-int/${OUTPUT_DIR}/Forge/">
+target_compile_options(Trident-Forge PRIVATE
+    $<$<CXX_COMPILER_ID:MSVC>:/Fo"${CMAKE_SOURCE_DIR}/bin-int/${OUTPUT_DIR}/Trident-Forge/">
 )
 
 # Executable + Library output folders
-set_target_properties(Forge PROPERTIES
+set_target_properties(Trident-Forge PROPERTIES
     RUNTIME_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR}/bin/${OUTPUT_DIR}
     ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR}/bin/${OUTPUT_DIR}
     LIBRARY_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR}/bin/${OUTPUT_DIR}
 )
 
 # Copy Shaders directory to output binary directory
-add_custom_command(TARGET Forge POST_BUILD
+add_custom_command(TARGET Trident-Forge POST_BUILD
     COMMAND ${CMAKE_COMMAND} -E copy_directory
-    "${CMAKE_SOURCE_DIR}/Forge/Shaders"
-    "$<TARGET_FILE_DIR:Forge>/Shaders")
+    "${CMAKE_SOURCE_DIR}/Trident-Forge/Shaders"
+    "$<TARGET_FILE_DIR:Trident-Forge>/Shaders")
