@@ -1,31 +1,23 @@
 #pragma once
 
-#include "Core.h"
-
 #include <string>
-#include <unordered_map>
-
 #include <glm/glm.hpp>
 
 namespace Engine
 {
-    // Shader class encapsulates shader program creation, compilation, and usage
-    class TRIDENT_API Shader
-    {
-    public:
-        Shader(const std::string& vertexPath, const std::string& fragmentPath); // Load, compile, and link shaders
-        ~Shader(); // Cleanup
+	class Shader
+	{
+	public:
+		virtual ~Shader() = default;
 
-        void Bind() const; // Activate shader
-        void Unbind() const; // Deactivate shader
+		virtual void Bind() const = 0;
+		virtual void Unbind() const = 0;
 
-        GLuint GetID() const { return m_RendererID; } // Access raw OpenGL program ID
+		// Uniform setting
+		virtual void SetUniformInt(const std::string& name, int value) = 0;
+		virtual void SetUniformFloat4(const std::string& name, const glm::vec4& value) = 0;
+		virtual void SetUniformMat4(const std::string& name, const glm::mat4& matrix) = 0;
 
-    private:
-        GLuint m_RendererID; // OpenGL shader program ID
-
-        std::string LoadShaderSource(const std::string& filepath); // Reads shader code from file
-        GLuint CompileShader(GLenum type, const std::string& source); // Compiles individual shader
-        GLuint CreateShaderProgram(const std::string& vertexSrc, const std::string& fragmentSrc); // Links shaders into a program
-    };
+		static Shader* Create(const std::string& vertexSrc, const std::string& fragmentSrc);
+	};
 }

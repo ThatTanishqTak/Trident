@@ -16,11 +16,14 @@ void Application::Run()
     while (!glfwWindowShouldClose(m_Window.GetWindow()))
     {
         // Set background color and clear
-        glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
-        glClear(GL_COLOR_BUFFER_BIT);
+        m_Renderer.SetClearColor(0.0f, 0.0f, 0.0f, 1.0f);
+        m_Renderer.Clear();
 
         // Render scene
-        m_Renderer.Render();
+        //m_Renderer.Render();
+
+        // Render userinterface
+        RenderUI();
 
         // Poll for and process events
         glfwPollEvents();
@@ -38,6 +41,11 @@ void Application::Init()
 
 void Application::Shutdown()
 {
-    m_Renderer.Shutdown(); // Clean up the renderer
+    //m_Renderer.Shutdown(); // Clean up the renderer
     m_Window.Shutdown(); // Clean up the window
+}
+
+void Application::RenderUI()
+{
+    // Here goes ImGui code
 }

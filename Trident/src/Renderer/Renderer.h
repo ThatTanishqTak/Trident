@@ -1,26 +1,18 @@
 #pragma once
 
-#include "Core.h"
-
-#include "Shader.h"
+#include "RendererAPI.h"
 
 namespace Engine
 {
-    // Renderer handles all OpenGL rendering operations for the engine
-    class TRIDENT_API Renderer
-    {
-    public:
-        Renderer();     // Constructor: initializes member variables
-        ~Renderer();    // Destructor: cleans up resources
+	class Renderer
+	{
+	public:
+		void Init();
+		void SetClearColor(float r, float g, float b, float a);
+		void Clear();
+		void DrawIndexed(unsigned int count);
 
-        void Init();    // Initialize buffers, shaders, etc.
-        void Render();  // Render the scene (triangle)
-        void Shutdown();// Clean up GPU resources
-
-    private:
-        GLuint m_VAO;   // Vertex Array Object: stores vertex attribute state
-        GLuint m_VBO;   // Vertex Buffer Object: stores vertex data
-
-        class Shader* m_Shader; // Pointer to the Shader used for rendering
-    };
+	private:
+		std::unique_ptr<RendererAPI> m_RendererAPI;
+	};
 }

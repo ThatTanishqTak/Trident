@@ -1,10 +1,10 @@
-#include "Renderer/Shader.h"
+#include "Renderer/VertexArray.h"
 #include "Renderer/RendererAPI.h"
-#include "OpenGL/OpenGLShader.h"
+#include "OpenGL/OpenGLVertexArray.h"
 
 namespace Engine
 {
-	Shader* Shader::Create(const std::string& vertexSrc, const std::string& fragmentSrc)
+	VertexArray* VertexArray::Create()
 	{
 		switch (RendererAPI::GetAPI())
 		{
@@ -15,7 +15,7 @@ namespace Engine
 
 			case RendererAPIType::OpenGL:
 			{
-				return new OpenGLShader(vertexSrc, fragmentSrc);
+				return new OpenGLVertexArray();
 			}
 		}
 

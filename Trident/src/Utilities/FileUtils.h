@@ -5,7 +5,7 @@
 namespace Engine
 {
     // Utility class for file I/O operations.
-    class TRIDENT_API FileUtils
+    class FileUtils
     {
     public:
         // Reads the entire contents of a text file and returns it as a string.

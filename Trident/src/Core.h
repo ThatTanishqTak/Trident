@@ -1,23 +1,5 @@
 #pragma once
 
-// Platform detection
-#ifdef _WIN32
-	#define TRIDENT_PLATFORM_WINDOWS
-#else
-	#error Trident only supports Windows at the moment!
-#endif
-
-// DLL export/import
-#ifdef TRIDENT_PLATFORM_WINDOWS
-#ifdef TRIDENT_BUILD_DLL
-	#define TRIDENT_API __declspec(dllexport)
-#else
-	#define TRIDENT_API __declspec(dllimport)
-#endif
-#else
-	#define TRIDENT_API
-#endif
-
 // Standard Library Headers
 #include <iostream>
 #include <memory>
@@ -35,3 +17,4 @@
 #include <GLFW/glfw3.h>
 
 // Engine Core Headers
+#include "Utilities/FileUtils.h"

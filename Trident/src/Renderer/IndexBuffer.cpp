@@ -1,10 +1,10 @@
-#include "Renderer/Shader.h"
+#include "IndexBuffer.h"
 #include "Renderer/RendererAPI.h"
-#include "OpenGL/OpenGLShader.h"
+#include "OpenGL/OpenGLIndexBuffer.h"
 
 namespace Engine
 {
-	Shader* Shader::Create(const std::string& vertexSrc, const std::string& fragmentSrc)
+	IndexBuffer* IndexBuffer::Create(uint32_t* indices, uint32_t count)
 	{
 		switch (RendererAPI::GetAPI())
 		{
@@ -14,8 +14,8 @@ namespace Engine
 			}
 
 			case RendererAPIType::OpenGL:
-			{
-				return new OpenGLShader(vertexSrc, fragmentSrc);
+			{ 
+				return new OpenGLIndexBuffer(indices, count);
 			}
 		}
 

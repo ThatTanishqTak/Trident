@@ -5,7 +5,7 @@
 namespace Engine
 {
     // Manages a GLFW window
-    class TRIDENT_API WindowsWindow
+    class WindowsWindow
     {
     public:
         GLFWwindow* GetWindow() { return m_Window; } // Getter for internal window pointer

@@ -1,10 +1,10 @@
-#include "Renderer/Shader.h"
+#include "VertexBuffer.h"
+#include "OpenGL/OpenGLVertexBuffer.h"
 #include "Renderer/RendererAPI.h"
-#include "OpenGL/OpenGLShader.h"
 
 namespace Engine
 {
-	Shader* Shader::Create(const std::string& vertexSrc, const std::string& fragmentSrc)
+	VertexBuffer* VertexBuffer::Create(float* vertices, uint32_t size)
 	{
 		switch (RendererAPI::GetAPI())
 		{
@@ -15,7 +15,7 @@ namespace Engine
 
 			case RendererAPIType::OpenGL:
 			{
-				return new OpenGLShader(vertexSrc, fragmentSrc);
+				return new OpenGLVertexBuffer(vertices, size);
 			}
 		}
 
