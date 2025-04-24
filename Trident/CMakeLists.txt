@@ -17,11 +17,14 @@ target_include_directories(glm INTERFACE
 # Collect all source files
 file(GLOB_RECURSE TRIDENT_SOURCES CONFIGURE_DEPENDS src/*.cpp src/*.h)
 
-# Engine core
-add_library(Trident STATIC ${TRIDENT_SOURCES})
+# Define Trident as a SHARED library (DLL)
+add_library(Trident SHARED ${TRIDENT_SOURCES})
+
+# Enable DLL export macro in code
+target_compile_definitions(Trident PRIVATE TRIDENT_BUILD_DLL)
 
 # Precompiled header setup
-target_precompile_headers(Trident PRIVATE src/Core/Core.h)
+target_precompile_headers(Trident PRIVATE src/Core.h)
 
 # Include engine headers
 target_include_directories(Trident PUBLIC
@@ -36,7 +39,7 @@ target_link_libraries(Trident PUBLIC
     opengl32  # on Windows
 )
 
-# Redirect .obj’s into bin-int/.../Trident when building with MSVC
+# Redirect .obj files into bin-int/.../Trident when building with MSVC
 target_compile_options(Trident PRIVATE
   $<$<CXX_COMPILER_ID:MSVC>:/Fo"${CMAKE_SOURCE_DIR}/bin-int/${OUTPUT_DIR}/Trident/">
 )

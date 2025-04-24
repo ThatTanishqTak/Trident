@@ -1,13 +1,13 @@
 #pragma once
 
-#include "Core/Core.h"
+#include "Core.h"
 #include "WindowsWindow/WindowsWindow.h"
 #include "Renderer/Renderer.h"
 
 #include <iostream>
 
 // Represents the core application
-class Application
+class TRIDENT_API Application
 {
 public:
     Application();  // Constructor initializes the application
@@ -17,7 +17,7 @@ public:
 
 private:
     Engine::WindowsWindow m_Window; // The main application window
-    Engine::Renderer m_Renderer; // The main application window
+    Engine::Renderer m_Renderer; // The Renderer
 
     void Init();     // Initializes resources and systems
     void Shutdown(); // Cleans up resources and systems

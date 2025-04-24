@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Core/Core.h"
+#include "Core.h"
 
 #include <string>
 #include <unordered_map>
@@ -10,7 +10,7 @@
 namespace Engine
 {
     // Shader class encapsulates shader program creation, compilation, and usage
-    class Shader
+    class TRIDENT_API Shader
     {
     public:
         Shader(const std::string& vertexPath, const std::string& fragmentPath); // Load, compile, and link shaders

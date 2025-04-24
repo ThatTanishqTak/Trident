@@ -1,11 +1,11 @@
 #pragma once
 
-#include "Core/Core.h"
+#include "Core.h"
 
 namespace Engine
 {
     // Manages a GLFW window
-    class WindowsWindow
+    class TRIDENT_API WindowsWindow
     {
     public:
         GLFWwindow* GetWindow() { return m_Window; } // Getter for internal window pointer

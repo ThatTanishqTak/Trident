@@ -1,13 +1,13 @@
 #pragma once
 
-#include "Core/Core.h"
+#include "Core.h"
 
 #include "Shader.h"
 
 namespace Engine
 {
     // Renderer handles all OpenGL rendering operations for the engine
-    class Renderer
+    class TRIDENT_API Renderer
     {
     public:
         Renderer();     // Constructor: initializes member variables
