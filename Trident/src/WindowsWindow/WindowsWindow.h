@@ -1,19 +1,22 @@
 #pragma once
 
-#include "Core.h"
+#include "WindowAPI.h"
+#include <memory>
+
+struct GLFWwindow;
 
 namespace Engine
 {
-    // Manages a GLFW window
-    class WindowsWindow
-    {
-    public:
-        GLFWwindow* GetWindow() { return m_Window; } // Getter for internal window pointer
+	class WindowsWindow
+	{
+	public:
+		void Init();
+		void Shutdown();
 
-        void Init();     // Initializes the GLFW window
-        void Shutdown(); // Cleans up GLFW resources
+		// Returns GLFWwindow* as the native window
+		GLFWwindow* GetWindow() const;
 
-    private:
-        GLFWwindow* m_Window = nullptr; // Pointer to the actual GLFW window
-    };
+	private:
+		std::unique_ptr<WindowAPI> m_WindowAPI;
+	};
 }

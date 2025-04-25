@@ -4,3 +4,7 @@
 [submodule "Trident/vendor/glm"]
 	path = Trident/vendor/glm
 	url = https://github.com/ThatTanishqTak/glm.git
+[submodule "Trident/vendor/imgui"]
+	path = Trident/vendor/imgui
+	url = https://github.com/ThatTanishqTak/imgui.git
+	branch = docking

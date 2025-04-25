@@ -1,80 +1,93 @@
 #include "Application.h"
+#include <GLFW/glfw3.h>
 
+// Constructor: Initializes the application systems
 Application::Application()
 {
-    Init(); // Initialize the application
+	Init();
 }
 
+// Destructor: Cleans up resources before exit
 Application::~Application()
 {
-    Shutdown(); // Clean up resources
+	Shutdown();
 }
 
+// Main application loop
 void Application::Run()
 {
-    // Main loop runs while the window is open
-    while (!glfwWindowShouldClose(m_Window.GetWindow()))
-    {
-        // Set background color and clear
-        m_Renderer->SetClearColor(0.0f, 0.0f, 0.0f, 1.0f);
-        m_Renderer->Clear();
+	while (!glfwWindowShouldClose(m_Window->GetWindow()))
+	{
+		// Clear the screen with a black color
+		m_Renderer->SetClearColor(0.0f, 0.0f, 0.0f, 1.0f);
+		m_Renderer->Clear();
 
-        m_Shader->Bind();
-        m_VertexArray->Bind();
+		// Bind shader and vertex array to render the triangle
+		m_Shader->Bind();
+		m_VertexArray->Bind();
+		m_Renderer->DrawIndexed(m_VertexArray); // Issue draw call
 
-        // Render scene
-        m_Renderer->DrawIndexed(m_VertexArray);
+		// Render UI (ImGui, overlays, etc.)
+		RenderUI();
 
-        // Render userinterface
-        RenderUI();
+		// Poll for input and window events
+		glfwPollEvents();
 
-        // Poll for and process events
-        glfwPollEvents();
-
-        // Swap front and back buffers
-        glfwSwapBuffers(m_Window.GetWindow());
-    }
+		// Swap the front and back buffers
+		glfwSwapBuffers(m_Window->GetWindow());
+	}
 }
 
+// Initialization logic for window, renderer, buffers, and shader
 void Application::Init()
 {
-    m_Window.Init();
-    
-    m_Renderer = std::make_shared<Engine::Renderer>();
-    m_Renderer->Init();
+	// Create and initialize the window
+	m_Window = std::make_shared<Engine::WindowsWindow>();
+	m_Window->Init();
 
-    float vertices[] = {
-        // Position         // Color
-        -0.5f, -0.5f, 0.0f,  1.0f, 0.0f, 0.0f, 1.0f,
-         0.5f, -0.5f, 0.0f,  0.0f, 1.0f, 0.0f, 1.0f,
-         0.0f,  0.5f, 0.0f,  0.0f, 0.0f, 1.0f, 1.0f
-    };
+	// Initialize the rendering system
+	m_Renderer = std::make_shared<Engine::Renderer>();
+	m_Renderer->Init();
 
-    uint32_t indices[] = { 0, 1, 2 };
+	// Vertex data for a single triangle
+	float vertices[] = {
+		// Position             // Color (RGBA)
+		-0.5f, -0.5f, 0.0f,     1.0f, 0.0f, 0.0f, 1.0f,  // Bottom-left, red
+		 0.5f, -0.5f, 0.0f,     0.0f, 1.0f, 0.0f, 1.0f,  // Bottom-right, green
+		 0.0f,  0.5f, 0.0f,     0.0f, 0.0f, 1.0f, 1.0f   // Top, blue
+	};
 
-    auto vertexBuffer = Engine::VertexBuffer::Create(vertices, sizeof(vertices));
-    Engine::BufferLayout layout = {
-        { Engine::ShaderDataType::Float3, "a_Position" },
-        { Engine::ShaderDataType::Float4, "a_Color" }
-    };
-    vertexBuffer->SetLayout(layout);
+	// Index data for triangle
+	uint32_t indices[] = { 0, 1, 2 };
 
-    auto indexBuffer = Engine::IndexBuffer::Create(indices, 3);
+	// Create vertex buffer and define its layout
+	auto vertexBuffer = Engine::VertexBuffer::Create(vertices, sizeof(vertices));
+	Engine::BufferLayout layout = {
+		{ Engine::ShaderDataType::Float3, "a_Position" },  // Position attribute
+		{ Engine::ShaderDataType::Float4, "a_Color" }      // Color attribute
+	};
+	vertexBuffer->SetLayout(layout);
 
-    m_VertexArray = Engine::VertexArray::Create();
-    m_VertexArray->AddVertexBuffer(vertexBuffer);
-    m_VertexArray->SetIndexBuffer(indexBuffer);
+	// Create index buffer
+	auto indexBuffer = Engine::IndexBuffer::Create(indices, 3);
 
-    // Load shaders from files
-    m_Shader = Engine::Shader::Create("Shaders/Basic.vert", "Shaders/Basic.frag");
+	// Set up vertex array and bind buffers to it
+	m_VertexArray = Engine::VertexArray::Create();
+	m_VertexArray->AddVertexBuffer(vertexBuffer);
+	m_VertexArray->SetIndexBuffer(indexBuffer);
+
+	// Load and compile shaders from file
+	m_Shader = Engine::Shader::Create("Shaders/Basic.vert", "Shaders/Basic.frag");
 }
 
+// Clean up resources
 void Application::Shutdown()
 {
-    m_Window.Shutdown(); // Clean up the window
+	m_Window->Shutdown();
 }
 
+// Placeholder for user interface rendering (e.g., ImGui)
 void Application::RenderUI()
 {
-    // Here goes ImGui code
+	// TODO: Add ImGui or custom UI rendering here
 }

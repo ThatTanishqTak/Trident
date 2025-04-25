@@ -18,7 +18,7 @@ namespace Engine
 		virtual void Init() = 0;
 		virtual void SetClearColor(float r, float g, float b, float a) = 0;
 		virtual void Clear() = 0;
-		virtual void DrawIndexed(unsigned int count) = 0;
+		virtual void DrawIndexed(uint32_t count) = 0;
 
 		static RendererAPIType GetAPI();
 		static std::unique_ptr<RendererAPI> Create();

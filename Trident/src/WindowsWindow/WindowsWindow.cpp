@@ -2,57 +2,19 @@
 
 namespace Engine
 {
-    void WindowsWindow::Init()
-    {
-        // Initialize GLFW
-        if (!glfwInit())
-        {
-            std::cerr << "Failed to initialize GLFW!" << std::endl;
+	void WindowsWindow::Init()
+	{
+		m_WindowAPI = WindowAPI::Create();
+		m_WindowAPI->Init();
+	}
 
-            return;
-        }
+	void WindowsWindow::Shutdown()
+	{
+		// You can add any platform-agnostic cleanup here
+	}
 
-        // Set OpenGL version (Optional: Only needed if you're using modern OpenGL)
-        glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
-        glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
-        glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
-        // For macOS uncomment the next line
-        // glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
-
-        // Create a windowed mode window and its OpenGL context
-        m_Window = glfwCreateWindow(1920, 1080, "Trident-Forge", nullptr, nullptr);
-        if (!m_Window)
-        {
-            std::cerr << "Failed to create GLFW window!" << std::endl;
-            glfwTerminate();
-
-            return;
-        }
-        std::cout << "Window initialization successful" << std::endl;
-
-        // Make the window's context current
-        glfwMakeContextCurrent(m_Window);
-
-        // Load OpenGL functions with GLAD
-        if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress))
-        {
-            std::cerr << "Failed to initialize GLAD!" << std::endl;
-            
-            return;
-        }
-        std::cout << "GLAD initialization successful" << std::endl;
-
-        // Enable V-Sync
-        glfwSwapInterval(1);
-        std::cout << "V-Sync enabled" << std::endl;
-    }
-
-    void WindowsWindow::Shutdown()
-    {
-        // Cleanup
-        glfwDestroyWindow(m_Window);
-        glfwTerminate();
-
-        std::cout << "Window clean up successful" << std::endl;
-    }
+	GLFWwindow* WindowsWindow::GetWindow() const
+	{
+		return static_cast<GLFWwindow*>(m_WindowAPI->GetNativeWindow());
+	}
 }
