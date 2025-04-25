@@ -19,7 +19,7 @@ void Application::Run()
 	while (!glfwWindowShouldClose(m_Window->GetWindow()))
 	{
 		// Clear the screen with a black color
-		m_Renderer->SetClearColor(0.0f, 0.0f, 0.0f, 1.0f);
+		m_Renderer->SetClearColor(0.2f, 0.2f, 0.2f, 1.0f);
 		m_Renderer->Clear();
 
 		// Bind shader and vertex array to render the triangle
@@ -28,7 +28,11 @@ void Application::Run()
 		m_Renderer->DrawIndexed(m_VertexArray); // Issue draw call
 
 		// Render UI (ImGui, overlays, etc.)
-		RenderUI();
+		m_ImGuiLayer->Begin();
+
+		RenderUI(); // Now actually renders ImGui widgets
+
+		m_ImGuiLayer->End();
 
 		// Poll for input and window events
 		glfwPollEvents();
@@ -49,8 +53,13 @@ void Application::Init()
 	m_Renderer = std::make_shared<Engine::Renderer>();
 	m_Renderer->Init();
 
+	// Initialize the userinterface
+	m_ImGuiLayer = std::make_unique<Engine::ImGuiLayer>();
+	m_ImGuiLayer->Init(m_Window->GetWindow());
+
 	// Vertex data for a single triangle
-	float vertices[] = {
+	float vertices[] = 
+	{
 		// Position             // Color (RGBA)
 		-0.5f, -0.5f, 0.0f,     1.0f, 0.0f, 0.0f, 1.0f,  // Bottom-left, red
 		 0.5f, -0.5f, 0.0f,     0.0f, 1.0f, 0.0f, 1.0f,  // Bottom-right, green
@@ -83,11 +92,16 @@ void Application::Init()
 // Clean up resources
 void Application::Shutdown()
 {
+	m_Shader->Unbind();
+	m_VertexArray->Unbind();
+
 	m_Window->Shutdown();
 }
 
-// Placeholder for user interface rendering (e.g., ImGui)
 void Application::RenderUI()
 {
 	// TODO: Add ImGui or custom UI rendering here
+	ImGui::Begin("Hello from Trident");
+	ImGui::Text("FPS: %.1f", ImGui::GetIO().Framerate);
+	ImGui::End();
 }

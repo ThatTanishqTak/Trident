@@ -5,6 +5,7 @@
 #include "Renderer/Renderer.h"
 #include "Renderer/VertexArray.h"
 #include "Renderer/Shader.h"
+#include "ImGui/ImGuiLayer.h"
 
 #include <memory>
 
@@ -23,6 +24,9 @@ private:
 	std::shared_ptr<Engine::VertexArray> m_VertexArray;
 	std::shared_ptr<Engine::Shader> m_Shader;
 
+	std::unique_ptr<Engine::ImGuiLayer> m_ImGuiLayer;
+
+private:
 	void Init();
 	void Shutdown();
 

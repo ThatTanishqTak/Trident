@@ -18,7 +18,7 @@ namespace Engine
 			{
 				return std::make_unique<OpenGLRenderer>();
 			}
-			
+
 			case RendererAPIType::None:
 			default:
 			{

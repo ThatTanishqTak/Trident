@@ -14,12 +14,16 @@ namespace Engine
 	{
 		switch (s_API)
 		{
-		case WindowAPIType::OpenGL:
-			return std::make_unique<OpenGLWindow>();
+			case WindowAPIType::OpenGL:
+			{
+				return std::make_unique<OpenGLWindow>();
+			}
 
-		case WindowAPIType::None:
-		default:
-			return nullptr;
+			case WindowAPIType::None:
+			default:
+			{
+				return nullptr;
+			}
 		}
 	}
 }

@@ -7,6 +7,7 @@ namespace Engine
 	{
 		glfwDestroyWindow(m_Window);
 		glfwTerminate();
+		
 		std::cout << "Window cleanup successful" << std::endl;
 	}
 
@@ -27,6 +28,7 @@ namespace Engine
 		{
 			std::cerr << "Failed to create GLFW window!" << std::endl;
 			glfwTerminate();
+			
 			return;
 		}
 		std::cout << "Window initialization successful" << std::endl;
@@ -36,6 +38,7 @@ namespace Engine
 		if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress))
 		{
 			std::cerr << "Failed to initialize GLAD!" << std::endl;
+			
 			return;
 		}
 		std::cout << "GLAD initialization successful" << std::endl;
