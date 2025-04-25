@@ -7,8 +7,6 @@ namespace Engine
 	{
 		glfwDestroyWindow(m_Window);
 		glfwTerminate();
-		
-		std::cout << "Window cleanup successful" << std::endl;
 	}
 
 	void OpenGLWindow::Init()
@@ -31,7 +29,6 @@ namespace Engine
 			
 			return;
 		}
-		std::cout << "Window initialization successful" << std::endl;
 
 		glfwMakeContextCurrent(m_Window);
 
@@ -41,10 +38,8 @@ namespace Engine
 			
 			return;
 		}
-		std::cout << "GLAD initialization successful" << std::endl;
 
 		glfwSwapInterval(1);
-		std::cout << "V-Sync enabled" << std::endl;
 	}
 
 	void* OpenGLWindow::GetNativeWindow() const

@@ -15,7 +15,6 @@ namespace Engine
 
 			case RendererAPIType::OpenGL:
 			{
-				std::cout << "Creating Shader: " << vertexPath << ", " << fragmentPath << std::endl;
 				return std::make_shared<OpenGLShader>(vertexPath, fragmentPath);
 			}
 		}
