@@ -48,7 +48,7 @@ namespace Engine
 		glBindVertexArray(0);
 	}
 
-	void OpenGLVertexArray::AddVertexBuffer(VertexBuffer* vertexBuffer)
+	void OpenGLVertexArray::AddVertexBuffer(const std::shared_ptr<VertexBuffer>& vertexBuffer)
 	{
 		assert(vertexBuffer->GetLayout().GetElements().size() && "Vertex Buffer has no layout!");
 
@@ -68,7 +68,7 @@ namespace Engine
 		m_VertexBuffers.push_back(vertexBuffer);
 	}
 
-	void OpenGLVertexArray::SetIndexBuffer(IndexBuffer* indexBuffer)
+	void OpenGLVertexArray::SetIndexBuffer(const std::shared_ptr<IndexBuffer>& indexBuffer)
 	{
 		Bind();
 		indexBuffer->Bind();

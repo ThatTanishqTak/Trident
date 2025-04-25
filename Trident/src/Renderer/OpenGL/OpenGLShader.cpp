@@ -1,8 +1,10 @@
-#include "OpenGLShader.h"
+﻿#include "OpenGLShader.h"
 #include <glad/glad.h>
 #include <glm/gtc/type_ptr.hpp>
 #include <iostream>
 #include <cassert>
+
+#include "Utilities/FileUtils.h" // Include this to read files
 
 namespace Engine
 {
@@ -10,7 +12,7 @@ namespace Engine
 	{
 		GLuint shader = glCreateShader(type);
 		const char* src = source.c_str();
-		
+
 		glShaderSource(shader, 1, &src, nullptr);
 		glCompileShader(shader);
 
@@ -20,7 +22,7 @@ namespace Engine
 		{
 			char infoLog[512];
 			glGetShaderInfoLog(shader, 512, nullptr, infoLog);
-		
+
 			std::cerr << "Shader compilation error:\n" << infoLog << std::endl;
 			assert(false);
 		}
@@ -28,8 +30,11 @@ namespace Engine
 		return shader;
 	}
 
-	OpenGLShader::OpenGLShader(const std::string& vertexSrc, const std::string& fragmentSrc)
+	OpenGLShader::OpenGLShader(const std::string& vertexPath, const std::string& fragmentPath)
 	{
+		std::string vertexSrc = FileUtils::ReadFile(vertexPath);
+		std::string fragmentSrc = FileUtils::ReadFile(fragmentPath);
+
 		GLuint vertexShader = CompileShader(GL_VERTEX_SHADER, vertexSrc);
 		GLuint fragmentShader = CompileShader(GL_FRAGMENT_SHADER, fragmentSrc);
 
@@ -40,7 +45,7 @@ namespace Engine
 
 		GLint isLinked;
 		glGetProgramiv(m_RendererID, GL_LINK_STATUS, &isLinked);
-		
+
 		if (!isLinked)
 		{
 			char infoLog[512];
@@ -90,7 +95,7 @@ namespace Engine
 		{
 			std::cerr << "Warning: uniform '" << name << "' doesn't exist!" << std::endl;
 		}
-		
+
 		return location;
 	}
 }

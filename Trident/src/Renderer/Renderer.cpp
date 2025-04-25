@@ -1,4 +1,5 @@
 #include "Renderer.h"
+#include "VertexArray.h"
 
 namespace Engine
 {
@@ -18,8 +19,9 @@ namespace Engine
 		m_RendererAPI->Clear();
 	}
 
-	void Renderer::DrawIndexed(unsigned int count)
+	void Renderer::DrawIndexed(const std::shared_ptr<VertexArray>& vertexArray)
 	{
-		m_RendererAPI->DrawIndexed(count);
+		vertexArray->Bind();
+		m_RendererAPI->DrawIndexed(vertexArray->GetIndexBuffer()->GetCount());
 	}
 }

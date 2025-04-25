@@ -4,7 +4,7 @@
 
 namespace Engine
 {
-	Shader* Shader::Create(const std::string& vertexSrc, const std::string& fragmentSrc)
+	std::shared_ptr<Shader> Shader::Create(const std::string& vertexPath, const std::string& fragmentPath)
 	{
 		switch (RendererAPI::GetAPI())
 		{
@@ -15,7 +15,8 @@ namespace Engine
 
 			case RendererAPIType::OpenGL:
 			{
-				return new OpenGLShader(vertexSrc, fragmentSrc);
+				std::cout << "Creating Shader: " << vertexPath << ", " << fragmentPath << std::endl;
+				return std::make_shared<OpenGLShader>(vertexPath, fragmentPath);
 			}
 		}
 

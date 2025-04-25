@@ -1,6 +1,7 @@
 #pragma once
 
 #include "RendererAPI.h"
+#include "VertexArray.h"
 
 namespace Engine
 {
@@ -10,7 +11,7 @@ namespace Engine
 		void Init();
 		void SetClearColor(float r, float g, float b, float a);
 		void Clear();
-		void DrawIndexed(unsigned int count);
+		void DrawIndexed(const std::shared_ptr<VertexArray>& vertexArray);
 
 	private:
 		std::unique_ptr<RendererAPI> m_RendererAPI;

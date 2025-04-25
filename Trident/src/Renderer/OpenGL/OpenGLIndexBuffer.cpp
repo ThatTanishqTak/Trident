@@ -27,6 +27,6 @@ namespace Engine
 
 	uint32_t OpenGLIndexBuffer::GetCount() const
 	{
-		return 0;
+		return m_Count;
 	}
 }

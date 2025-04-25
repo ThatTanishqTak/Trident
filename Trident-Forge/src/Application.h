@@ -20,7 +20,9 @@ public:
 
 private:
     Engine::WindowsWindow m_Window; // The main application window
-    Engine::Renderer m_Renderer;    // The Renderer
+    //Engine::Renderer m_Renderer;    // The Renderer
+
+    std::shared_ptr<Engine::Renderer> m_Renderer;
 
     // NEW: Rendering resources
     std::shared_ptr<Engine::VertexArray> m_VertexArray;
