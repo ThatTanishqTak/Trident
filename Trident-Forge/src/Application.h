@@ -21,6 +21,7 @@ public:
 	~Application();
 
 	void Run();
+	static Application& Get();
 
 private:
 	std::shared_ptr<Engine::WindowsWindow> m_Window;
@@ -33,6 +34,8 @@ private:
 	std::shared_ptr<Engine::CameraController> m_CameraController;
 
 	std::unique_ptr<Engine::ImGuiLayer> m_ImGuiLayer;
+
+	static Application* s_Instance;
 
 private:
 	void Init();

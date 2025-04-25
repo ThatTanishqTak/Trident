@@ -10,7 +10,7 @@ namespace Engine
 
 	void WindowsWindow::Shutdown()
 	{
-		// You can add any platform-agnostic cleanup here
+
 	}
 
 	GLFWwindow* WindowsWindow::GetWindow() const
