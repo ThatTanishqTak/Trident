@@ -1,19 +1,16 @@
 #pragma once
 
-#include "RendererAPI.h"
-#include "RenderCommand.h"
+#include "RenderPass.h"
+#include <memory>
 
 namespace Engine
 {
 	class Renderer
 	{
 	public:
-		void Init();
-		void SetClearColor(float r, float g, float b, float a);
-		void Clear();
-		void DrawIndexed(const std::shared_ptr<VertexArray>& vertexArray);
-
-	private:
-		std::unique_ptr<RendererAPI> m_RendererAPI;
+		static void Init();
+		static void BeginScene(const std::shared_ptr<RenderPass>& renderPass);
+		static void EndScene();
+		static void DrawIndexed(const std::shared_ptr<class VertexArray>& vertexArray);
 	};
 }

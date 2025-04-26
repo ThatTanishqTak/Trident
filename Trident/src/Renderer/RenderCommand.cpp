@@ -5,22 +5,22 @@
 
 namespace Engine
 {
-	void RendererCommand::Init()
+	void RenderCommand::Init()
 	{
 		glEnable(GL_DEPTH_TEST);
 	}
 
-	void RendererCommand::SetClearColor(const glm::vec4& color)
+	void RenderCommand::SetClearColor(const glm::vec4& color)
 	{
 		glClearColor(color.r, color.g, color.b, color.a);
 	}
 
-	void RendererCommand::Clear()
+	void RenderCommand::Clear()
 	{
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	}
 
-	void RendererCommand::DrawIndexed(const std::shared_ptr<VertexArray>& vertexArray)
+	void RenderCommand::DrawIndexed(const std::shared_ptr<VertexArray>& vertexArray)
 	{
 		vertexArray->Bind();
 		glDrawElements(GL_TRIANGLES, vertexArray->GetIndexBuffer()->GetCount(), GL_UNSIGNED_INT, nullptr);

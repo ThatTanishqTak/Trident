@@ -4,7 +4,7 @@
 
 namespace Engine
 {
-	class RendererCommand
+	class RenderCommand
 	{
 	public:
 		static void Init();

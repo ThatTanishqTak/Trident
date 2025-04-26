@@ -1,67 +1,49 @@
 #include "Application.h"
+
 #include <GLFW/glfw3.h>
 
-// Define static singleton instance
 Application* Application::s_Instance = nullptr;
 
-// Constructor: Initializes the application systems
 Application::Application()
-{
-	s_Instance = this;
-
+{ 
 	Init();
 }
 
-// Destructor: Cleans up resources before exit
 Application::~Application()
 {
 	Shutdown();
-	s_Instance = nullptr;
 }
 
-// Returns the singleton instance
 Application& Application::Get()
 {
 	return *s_Instance;
 }
 
-// Main application loop
 void Application::Run()
 {
 	while (!glfwWindowShouldClose(m_Window->GetWindow()))
 	{
 		Engine::Time::Update();
 
-		m_Renderer->SetClearColor(0.2f, 0.2f, 0.2f, 1.0f);
-		m_Renderer->Clear();
-
-		m_Shader->Bind();
-
-		glm::mat4 model = glm::mat4(1.0f);
-		glm::mat4 viewProj = m_Camera->GetViewProjectionMatrix();
-
-		m_Shader->SetUniformMat4("u_Model", model);
-		m_Shader->SetUniformMat4("u_ViewProjection", viewProj);
-
-		m_VertexArray->Bind();
-		m_Renderer->DrawIndexed(m_VertexArray);
-
-		RenderUI();
 		m_CameraController->OnUpdate(Engine::Time::GetDeltaTime());
 
-		if (glfwGetKey(m_Window->GetWindow(), GLFW_KEY_ESCAPE) == GLFW_PRESS)
-		{
-			glfwSetWindowShouldClose(m_Window->GetWindow(), GLFW_TRUE);
-		}
+		Engine::Renderer::BeginScene(m_RenderPass);
+
+		RenderScene();
+
+		Engine::Renderer::EndScene();
+
+		RenderUI();
 
 		glfwPollEvents();
 		glfwSwapBuffers(m_Window->GetWindow());
 	}
 }
 
-// Initialization logic for window, renderer, buffers, and shader
 void Application::Init()
 {
+	s_Instance = this;
+
 	Engine::Time::Init();
 
 	m_Window = std::make_shared<Engine::WindowsWindow>();
@@ -69,6 +51,10 @@ void Application::Init()
 
 	m_Renderer = std::make_shared<Engine::Renderer>();
 	m_Renderer->Init();
+
+	Engine::RenderPassSpecification renderPassSpec;
+	renderPassSpec.ClearColor = { 0.1f, 0.1f, 0.1f, 1.0f }; // Dark grey background
+	m_RenderPass = std::make_shared<Engine::OpenGLRenderPass>(renderPassSpec);
 
 	m_CameraController = std::make_shared<Engine::CameraController>(1920.0f / 1080.0f);
 	m_Camera = std::make_unique<Engine::PerspectiveCamera>(m_CameraController->GetCamera());
@@ -113,7 +99,6 @@ void Application::Init()
 	m_Shader = Engine::Shader::Create("Shaders/Basic.vert", "Shaders/Basic.frag");
 }
 
-// Clean up resources
 void Application::Shutdown()
 {
 	m_Shader->Unbind();
@@ -121,6 +106,22 @@ void Application::Shutdown()
 
 	m_ImGuiLayer->Shutdown();
 	m_Window->Shutdown();
+
+	s_Instance = nullptr;
+}
+
+void Application::RenderScene()
+{
+	m_Shader->Bind();
+
+	glm::mat4 model = glm::mat4(1.0f);
+	glm::mat4 viewProj = m_Camera->GetViewProjectionMatrix();
+
+	m_Shader->SetUniformMat4("u_Model", model);
+	m_Shader->SetUniformMat4("u_ViewProjection", viewProj);
+
+	m_VertexArray->Bind();
+	Engine::Renderer::DrawIndexed(m_VertexArray);
 }
 
 void Application::RenderUI()

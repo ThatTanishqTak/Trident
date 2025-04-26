@@ -1,25 +1,28 @@
 #include "Renderer.h"
-#include "VertexArray.h"
+#include "Renderer/RenderCommand.h"
 
-namespace Engine
-{
+namespace Engine {
+
+	static std::shared_ptr<RenderPass> s_ActiveRenderPass;
+
 	void Renderer::Init()
 	{
-		RendererCommand::Init();
+		RenderCommand::Init();
 	}
 
-	void Renderer::SetClearColor(float r, float g, float b, float a)
+	void Renderer::BeginScene(const std::shared_ptr<RenderPass>& renderPass)
 	{
-		RendererCommand::SetClearColor(glm::vec4(r, g, b, a));
+		s_ActiveRenderPass = renderPass;
+		s_ActiveRenderPass->Begin();
 	}
 
-	void Renderer::Clear()
+	void Renderer::EndScene()
 	{
-		RendererCommand::Clear();
+		s_ActiveRenderPass->End();
 	}
 
 	void Renderer::DrawIndexed(const std::shared_ptr<VertexArray>& vertexArray)
 	{
-		RendererCommand::DrawIndexed(vertexArray);
+		RenderCommand::DrawIndexed(vertexArray);
 	}
 }
