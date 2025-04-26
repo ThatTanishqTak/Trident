@@ -1,26 +1,33 @@
 #pragma once
 
+#include <glm/glm.hpp>
 #include <memory>
 
 namespace Engine
 {
-	enum class RendererAPIType
-	{
-		None = 0,
-		OpenGL
-	};
+	class VertexArray;
 
 	class RendererAPI
 	{
 	public:
+		enum class API
+		{
+			None = 0, 
+			OpenGL
+			// Vulkan, DirectX could be added later
+		};
+
+	public:
 		virtual ~RendererAPI() = default;
 
 		virtual void Init() = 0;
-		virtual void SetClearColor(float r, float g, float b, float a) = 0;
+		virtual void SetClearColor(const glm::vec4& color) = 0;
 		virtual void Clear() = 0;
-		virtual void DrawIndexed(uint32_t count) = 0;
+		virtual void DrawIndexed(const std::shared_ptr<VertexArray>& vertexArray) = 0;
 
-		static RendererAPIType GetAPI();
-		static std::unique_ptr<RendererAPI> Create();
+		static API GetAPI() { return s_API; }
+
+	private:
+		static API s_API;
 	};
 }

@@ -1,4 +1,5 @@
 #include "OpenGLWindow.h"
+
 #include <iostream>
 
 namespace Engine
@@ -14,6 +15,7 @@ namespace Engine
 		if (!glfwInit())
 		{
 			std::cerr << "Failed to initialize GLFW!" << std::endl;
+			
 			return;
 		}
 
@@ -32,6 +34,9 @@ namespace Engine
 
 		glfwMakeContextCurrent(m_Window);
 
+		glfwSetErrorCallback(GLFWErrorCallback);
+		glfwSetWindowUserPointer(m_Window, this);
+
 		if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress))
 		{
 			std::cerr << "Failed to initialize GLAD!" << std::endl;
@@ -45,5 +50,10 @@ namespace Engine
 	void* OpenGLWindow::GetNativeWindow() const
 	{
 		return m_Window;
+	}
+
+	void OpenGLWindow::GLFWErrorCallback(int error, const char* description)
+	{
+		std::cerr << "[GLFW Error] (" << error << "): " << description << std::endl;
 	}
 }

@@ -4,6 +4,7 @@
 #include "Utilities/Time.h"
 
 #include "WindowsWindow/WindowsWindow.h"
+
 #include "Renderer/Renderer.h"
 #include "Renderer/VertexArray.h"
 #include "Renderer/Shader.h"

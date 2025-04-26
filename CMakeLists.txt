@@ -19,7 +19,7 @@ else()
     set(ARCH "x86")
 endif()
 
-set(OUTPUT_DIR "${OS_NAME}-${OUTPUT_CONFIG}-${ARCH}")
+set(OUTPUT_DIR "${OS_NAME}-${OUTPUT_CONFIG}-${ARCH}/${PROJECT_NAME}")
 
 # Final binary output
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY "${CMAKE_SOURCE_DIR}/bin/${OUTPUT_DIR}")

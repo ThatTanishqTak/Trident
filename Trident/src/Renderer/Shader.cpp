@@ -8,12 +8,12 @@ namespace Engine
 	{
 		switch (RendererAPI::GetAPI())
 		{
-			case RendererAPIType::None:
+			case RendererAPI::API::None:
 			{
 				return nullptr;
 			}
 
-			case RendererAPIType::OpenGL:
+			case RendererAPI::API::OpenGL:
 			{
 				return std::make_shared<OpenGLShader>(vertexPath, fragmentPath);
 			}

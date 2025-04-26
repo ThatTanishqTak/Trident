@@ -7,9 +7,9 @@ namespace Engine
 	class OpenGLRenderer : public RendererAPI
 	{
 	public:
-		void Init() override;
-		void SetClearColor(float r, float g, float b, float a) override;
-		void Clear() override;
-		void DrawIndexed(uint32_t count) override;
+		virtual void Init() override;
+		virtual void SetClearColor(const glm::vec4& color) override;
+		virtual void Clear() override;
+		virtual void DrawIndexed(const std::shared_ptr<VertexArray>& vertexArray) override;
 	};
 }

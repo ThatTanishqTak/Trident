@@ -1,7 +1,7 @@
 #pragma once
 
 #include "RendererAPI.h"
-#include "VertexArray.h"
+#include "RenderCommand.h"
 
 namespace Engine
 {

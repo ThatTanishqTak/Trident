@@ -49,6 +49,11 @@ void Application::Run()
 		RenderUI();
 		m_CameraController->OnUpdate(Engine::Time::GetDeltaTime());
 
+		if (glfwGetKey(m_Window->GetWindow(), GLFW_KEY_ESCAPE) == GLFW_PRESS)
+		{
+			glfwSetWindowShouldClose(m_Window->GetWindow(), GLFW_TRUE);
+		}
+
 		glfwPollEvents();
 		glfwSwapBuffers(m_Window->GetWindow());
 	}

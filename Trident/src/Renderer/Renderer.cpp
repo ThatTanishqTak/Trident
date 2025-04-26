@@ -5,23 +5,21 @@ namespace Engine
 {
 	void Renderer::Init()
 	{
-		m_RendererAPI = RendererAPI::Create();
-		m_RendererAPI->Init();
+		RendererCommand::Init();
 	}
 
 	void Renderer::SetClearColor(float r, float g, float b, float a)
 	{
-		m_RendererAPI->SetClearColor(r, g, b, a);
+		RendererCommand::SetClearColor(glm::vec4(r, g, b, a));
 	}
 
 	void Renderer::Clear()
 	{
-		m_RendererAPI->Clear();
+		RendererCommand::Clear();
 	}
 
 	void Renderer::DrawIndexed(const std::shared_ptr<VertexArray>& vertexArray)
 	{
-		vertexArray->Bind();
-		m_RendererAPI->DrawIndexed(vertexArray->GetIndexBuffer()->GetCount());
+		RendererCommand::DrawIndexed(vertexArray);
 	}
 }

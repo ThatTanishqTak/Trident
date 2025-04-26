@@ -27,14 +27,12 @@ namespace Engine
         glm::vec3 right = glm::normalize(glm::cross(front, glm::vec3(0.0f, 1.0f, 0.0f)));
 
         // Will use my custom key bindings
-        if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS) { pos += front * deltaTime * m_MoveSpeed; /*std::cout << "W" << std::endl;*/ }
-        if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS) { pos -= front * deltaTime * m_MoveSpeed; /*std::cout << "S" << std::endl;*/ }
-        if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS) { pos -= right * deltaTime * m_MoveSpeed; /*std::cout << "A" << std::endl;*/ }
-        if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS) { pos += right * deltaTime * m_MoveSpeed; /*std::cout << "D" << std::endl;*/ }
+        if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS) { pos += front * deltaTime * m_MoveSpeed; }
+        if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS) { pos -= front * deltaTime * m_MoveSpeed; }
+        if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS) { pos -= right * deltaTime * m_MoveSpeed; }
+        if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS) { pos += right * deltaTime * m_MoveSpeed; }
 
         m_Camera.SetPosition(pos);
-
-        std::cout << pos.x << " " << pos.y << " " << pos.z << std::endl;
     }
 
     void CameraController::OnMouseMove(double xpos, double ypos)

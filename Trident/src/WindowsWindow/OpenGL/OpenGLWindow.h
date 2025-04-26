@@ -1,6 +1,9 @@
 #pragma once
 
 #include "WindowsWindow/WindowAPI.h"
+
+#include <functional>
+
 #include <GLFW/glfw3.h>
 #include <glad/glad.h>
 
@@ -16,5 +19,7 @@ namespace Engine
 
 	private:
 		GLFWwindow* m_Window = nullptr;
+
+		static void GLFWErrorCallback(int error, const char* description);
 	};
 }
