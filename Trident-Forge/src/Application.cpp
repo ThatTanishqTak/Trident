@@ -30,10 +30,9 @@ void Application::Run()
 		Engine::Renderer::BeginScene(m_RenderPass);
 
 		RenderScene();
+		RenderUI();
 
 		Engine::Renderer::EndScene();
-
-		RenderUI();
 
 		glfwPollEvents();
 		glfwSwapBuffers(m_Window->GetWindow());
@@ -99,22 +98,13 @@ void Application::Init()
 	m_Shader = Engine::Shader::Create("Shaders/Basic.vert", "Shaders/Basic.frag");
 }
 
-void Application::Shutdown()
-{
-	m_Shader->Unbind();
-	m_VertexArray->Unbind();
-
-	m_ImGuiLayer->Shutdown();
-	m_Window->Shutdown();
-
-	s_Instance = nullptr;
-}
-
 void Application::RenderScene()
 {
 	m_Shader->Bind();
 
-	glm::mat4 model = glm::mat4(1.0f);
+	r += 10.0f * Engine::Time::GetDeltaTime();
+
+	glm::mat4 model = glm::rotate(glm::mat4(1.0f), glm::radians(r), glm::vec3(1.0f, 1.0f, 0.0f));
 	glm::mat4 viewProj = m_Camera->GetViewProjectionMatrix();
 
 	m_Shader->SetUniformMat4("u_Model", model);
@@ -133,4 +123,15 @@ void Application::RenderUI()
 	ImGui::End();
 
 	m_ImGuiLayer->End();
+}
+
+void Application::Shutdown()
+{
+	m_Shader->Unbind();
+	m_VertexArray->Unbind();
+
+	m_ImGuiLayer->Shutdown();
+	m_Window->Shutdown();
+
+	s_Instance = nullptr;
 }

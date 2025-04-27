@@ -36,13 +36,17 @@ private:
 	static Application* s_Instance;
 
 	std::shared_ptr<Engine::WindowsWindow> m_Window;
+	
 	std::shared_ptr<Engine::Renderer> m_Renderer;
 	std::shared_ptr<Engine::RenderPass> m_RenderPass;
+	std::shared_ptr<Engine::VertexArray> m_VertexArray;
+	std::shared_ptr<Engine::Shader> m_Shader;
 
 	std::shared_ptr<Engine::CameraController> m_CameraController;
 	std::unique_ptr<Engine::PerspectiveCamera> m_Camera;
+
 	std::unique_ptr<Engine::ImGuiLayer> m_ImGuiLayer;
 
-	std::shared_ptr<Engine::VertexArray> m_VertexArray;
-	std::shared_ptr<Engine::Shader> m_Shader;
+private:
+	float r = 0.0f;
 };
