@@ -24,11 +24,9 @@ void Application::Run()
 {
     while (!glfwWindowShouldClose(m_Window->GetWindow()))
     {
-        // Update time and camera
         Engine::Time::Update();
         m_CameraController->OnUpdate(Engine::Time::GetDeltaTime());
 
-        // 1) Render scene into offscreen framebuffer
         m_SceneFramebuffer->Bind();
         Engine::RenderCommand::SetClearColor(m_SceneFramebuffer->GetSpecification().ClearColor);
         Engine::RenderCommand::Clear();
@@ -38,14 +36,12 @@ void Application::Run()
         Engine::Renderer::EndScene();
         m_SceneFramebuffer->Unbind();
 
-        // Render UI and viewport
         m_ImGuiLayer->Begin();
         
         RenderUI();
         
         m_ImGuiLayer->End();
 
-        // 3) Present
         glfwPollEvents();
         glfwSwapBuffers(m_Window->GetWindow());
     }
@@ -87,7 +83,8 @@ void Application::Init()
     m_ImGuiLayer->Init(m_Window->GetWindow());
 
     // Mesh, buffers, shader
-    float vertices[] = {
+    float vertices[] =
+    {
         // Positions        // Colors
         -0.5f, -0.5f, -0.5f,   1.0f, 0.0f, 0.0f, 1.0f,
          0.5f, -0.5f, -0.5f,   0.0f, 1.0f, 0.0f, 1.0f,
@@ -98,7 +95,8 @@ void Application::Init()
          0.5f,  0.5f,  0.5f,   1.0f, 1.0f, 1.0f, 1.0f,
         -0.5f,  0.5f,  0.5f,   0.5f, 0.5f, 0.5f, 1.0f,
     };
-    uint32_t indices[] = {
+    uint32_t indices[] =
+    {
         0,1,2, 2,3,0,
         4,5,6, 6,7,4,
         4,5,1, 1,0,4,
@@ -155,45 +153,53 @@ void Application::RenderUI()
         ImGui::SetNextWindowViewport(viewport->ID);
         ImGui::PushStyleVar(ImGuiStyleVar_WindowRounding, 0.0f);
         ImGui::PushStyleVar(ImGuiStyleVar_WindowBorderSize, 0.0f);
-        window_flags |= ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoCollapse |
-            ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove;
+        window_flags |= ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove;
         window_flags |= ImGuiWindowFlags_NoBringToFrontOnFocus | ImGuiWindowFlags_NoNavFocus;
     }
 
     if (!opt_padding)
-        ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(0.0f, 0.0f));
-
-    ImGui::Begin("DockSpace Demo", &p_open, window_flags);
-
-    if (!opt_padding)
-        ImGui::PopStyleVar();
-
-    if (opt_fullscreen)
-        ImGui::PopStyleVar(2);
-
-    // DockSpace
-    ImGuiIO& io = ImGui::GetIO();
-    if (io.ConfigFlags & ImGuiConfigFlags_DockingEnable)
     {
-        ImGuiID dockspace_id = ImGui::GetID("MyDockspace");
-        ImGui::DockSpace(dockspace_id, ImVec2(0.0f, 0.0f), dockspace_flags);
+        ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(0.0f, 0.0f));
     }
 
+    ImGui::Begin("DockSpace Demo", &p_open, window_flags);
+    {
+        if (!opt_padding)
+        {
+            ImGui::PopStyleVar();
+        }
+
+        if (opt_fullscreen)
+        {
+            ImGui::PopStyleVar(2);
+        }
+
+        // DockSpace
+        ImGuiIO& io = ImGui::GetIO();
+        if (io.ConfigFlags & ImGuiConfigFlags_DockingEnable)
+        {
+            ImGuiID dockspace_id = ImGui::GetID("MyDockspace");
+            ImGui::DockSpace(dockspace_id, ImVec2(0.0f, 0.0f), dockspace_flags);
+        }
+    }
     ImGui::End();
 
     // === SETTINGS PANEL ===
     ImGui::Begin("Settings");
-    ImGui::Text("FPS: %.1f", ImGui::GetIO().Framerate);
-    ImGui::DragFloat("Rotation", &r, 1.0f, 0.0f, 360.0f);
+    {
+        ImGui::Text("FPS: %.1f", ImGui::GetIO().Framerate);
+        ImGui::DragFloat("Rotation", &r, 1.0f, 0.0f, 360.0f);
+    }
     ImGui::End();
 
     // === SCENE VIEWPORT ===
     ImGui::Begin("Scene Viewport");
-
-    // Ensure the framebuffer texture is valid and draw it
-    ImTextureID texID = (ImTextureID)(uintptr_t)m_SceneFramebuffer->GetColorAttachmentRendererID();
-    ImVec2 viewportPanelSize = ImGui::GetContentRegionAvail();
-    ImGui::Image(texID, viewportPanelSize, ImVec2(0, 1), ImVec2(1, 0)); // Flip vertically
+    {
+        // Ensure the framebuffer texture is valid and draw it
+        ImTextureID texID = (ImTextureID)(uintptr_t)m_SceneFramebuffer->GetColorAttachmentRendererID();
+        ImVec2 viewportPanelSize = ImGui::GetContentRegionAvail();
+        ImGui::Image(texID, viewportPanelSize, ImVec2(0, 1), ImVec2(1, 0)); // Flip vertically
+    }
     ImGui::End();
 }
 
@@ -201,5 +207,6 @@ void Application::Shutdown()
 {
     m_ImGuiLayer->Shutdown();
     m_Window->Shutdown();
+    
     s_Instance = nullptr;
 }

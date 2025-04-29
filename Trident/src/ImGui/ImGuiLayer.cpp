@@ -1,4 +1,5 @@
 ﻿#include "ImGuiLayer.h"
+#include <imgui_internal.h>
 
 namespace Engine
 {
@@ -33,13 +34,29 @@ namespace Engine
         window_flags |= ImGuiWindowFlags_NoBringToFrontOnFocus | ImGuiWindowFlags_NoNavFocus;
 
         ImGui::Begin("DockSpace Root", nullptr, window_flags);
-        ImGui::PopStyleVar(2);
+        {
+            ImGui::PopStyleVar(2);
 
-        // 2. Create the dockspace inside this window
-        ImGuiID dockspace_id = ImGui::GetID("TridentDockspace");
-        ImGui::DockSpace(dockspace_id, ImVec2(0.0f, 0.0f), ImGuiDockNodeFlags_None);
+            ImGuiID dockspace_id = ImGui::GetID("TridentDockspace");
+            ImGui::DockSpace(dockspace_id, ImVec2(0.0f, 0.0f), ImGuiDockNodeFlags_None);
 
-        ImGui::End(); // ← End the dockspace root window
+            if (ImGui::DockBuilderGetNode(dockspace_id) == nullptr)
+            {
+                ImGui::DockBuilderRemoveNode(dockspace_id); // clear any previous layout
+                ImGui::DockBuilderAddNode(dockspace_id, ImGuiDockNodeFlags_DockSpace);
+                ImGui::DockBuilderSetNodeSize(dockspace_id, ImGui::GetMainViewport()->WorkSize);
+
+                ImGuiID dock_main_id = dockspace_id;
+                ImGuiID dock_id_left = ImGui::DockBuilderSplitNode(dock_main_id, ImGuiDir_Left, 0.75f, nullptr, &dock_main_id);
+                ImGuiID dock_id_right = dock_main_id;
+
+                ImGui::DockBuilderDockWindow("Scene Viewport", dock_id_left);
+                ImGui::DockBuilderDockWindow("Settings", dock_id_right);
+
+                ImGui::DockBuilderFinish(dockspace_id);
+            }
+        }
+        ImGui::End();
     }
 
     void ImGuiLayer::Begin()
