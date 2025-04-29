@@ -16,10 +16,15 @@ namespace Engine
 
 		void Init() override;
 		void* GetNativeWindow() const override;
+		int GetWidth() const override;
+		int GetHeight() const override;
 
 	private:
 		GLFWwindow* m_Window = nullptr;
 
 		static void GLFWErrorCallback(int error, const char* description);
+
+		int m_Width = 1920;
+		int m_Height = 1080;
 	};
 }

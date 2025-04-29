@@ -1,6 +1,9 @@
-﻿project(Trident)
+﻿### Trident Project ###
 
-# Build Glad (loader)
+# Set the project again for Trident engine (can be omitted unless needed for IDE grouping)
+project(Trident)
+
+# Add Glad OpenGL loader as a static library
 add_library(glad STATIC
   ${CMAKE_CURRENT_SOURCE_DIR}/vendor/glad/src/glad.c
 )
@@ -8,29 +11,28 @@ target_include_directories(glad PUBLIC
   ${CMAKE_CURRENT_SOURCE_DIR}/vendor/glad/include
 )
 
-# GLM (header-only)
+# Add GLM (header-only math library)
 add_library(glm INTERFACE)
 target_include_directories(glm INTERFACE
   ${CMAKE_CURRENT_SOURCE_DIR}/vendor/glm
 )
 
-# Source files
+# Gather all source and header files from the engine
 file(GLOB_RECURSE TRIDENT_SOURCES CONFIGURE_DEPENDS src/*.cpp src/*.h)
 
-# Engine core library
+# Define Trident engine as a static library
 add_library(Trident STATIC ${TRIDENT_SOURCES})
 
-# Precompiled header setup
+# Use precompiled headers for faster compilation
 target_precompile_headers(Trident PRIVATE src/Core.h)
 
-# Include paths
+# Include path for Trident engine
 target_include_directories(Trident PUBLIC
   ${CMAKE_CURRENT_SOURCE_DIR}/src
 )
 
-# ImGui
+# Add ImGui as a static library (UI library)
 set(IMGUI_DIR "${CMAKE_CURRENT_SOURCE_DIR}/vendor/imgui")
-
 file(GLOB IMGUI_SOURCES
     ${IMGUI_DIR}/*.cpp
     ${IMGUI_DIR}/backends/imgui_impl_glfw.cpp
@@ -39,11 +41,9 @@ file(GLOB IMGUI_SOURCES
 
 add_library(ImGui STATIC ${IMGUI_SOURCES})
 target_include_directories(ImGui PUBLIC ${IMGUI_DIR} ${IMGUI_DIR}/backends)
-
-# Replaced GL with opengl32
 target_link_libraries(ImGui PUBLIC glfw opengl32)
 
-# Trident engine links
+# Link Trident with dependencies
 target_link_libraries(Trident PUBLIC
     glad
     glfw
@@ -52,7 +52,7 @@ target_link_libraries(Trident PUBLIC
     ImGui
 )
 
-# MSVC-specific object output location
+# Set MSVC-specific object file output directory
 target_compile_options(Trident PRIVATE
   $<$<CXX_COMPILER_ID:MSVC>:/Fo"${CMAKE_SOURCE_DIR}/bin-int/${OUTPUT_DIR}/Trident/">
 )

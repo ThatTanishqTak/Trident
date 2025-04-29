@@ -6,6 +6,7 @@
 
 #include "Renderer/Renderer.h"
 #include "Renderer/VertexArray.h"
+#include "Renderer/Framebuffer.h"
 #include "Renderer/Shader.h"
 #include "Renderer/RenderPass.h"
 #include "Renderer/OpenGL/OpenGLRenderPass.h"
@@ -38,6 +39,7 @@ private:
 	std::shared_ptr<Engine::WindowsWindow> m_Window;
 	
 	std::shared_ptr<Engine::Renderer> m_Renderer;
+	std::shared_ptr<Engine::Framebuffer> m_SceneFramebuffer;
 	std::shared_ptr<Engine::RenderPass> m_RenderPass;
 	std::shared_ptr<Engine::VertexArray> m_VertexArray;
 	std::shared_ptr<Engine::Shader> m_Shader;

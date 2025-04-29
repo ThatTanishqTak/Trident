@@ -23,7 +23,7 @@ namespace Engine
 		glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
 		glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
-		m_Window = glfwCreateWindow(1920, 1080, "Trident-Forge", nullptr, nullptr);
+		m_Window = glfwCreateWindow(m_Width, m_Height, "Trident-Forge", nullptr, nullptr);
 		if (!m_Window)
 		{
 			std::cerr << "Failed to create GLFW window!" << std::endl;
@@ -50,6 +50,16 @@ namespace Engine
 	void* OpenGLWindow::GetNativeWindow() const
 	{
 		return m_Window;
+	}
+
+	int OpenGLWindow::GetWidth() const
+	{
+		return m_Width;
+	}
+
+	int OpenGLWindow::GetHeight() const
+	{
+		return m_Height;
 	}
 
 	void OpenGLWindow::GLFWErrorCallback(int error, const char* description)

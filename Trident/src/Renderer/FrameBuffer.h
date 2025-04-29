@@ -1,33 +1,31 @@
-#pragma once
+﻿#pragma once
 
-#include <glm/glm.hpp>
 #include <memory>
+#include <glm/glm.hpp>
 
 namespace Engine
 {
-	struct FramebufferSpecification
-	{
-		uint32_t Width = 1920;
-		uint32_t Height = 1080;
-		glm::vec4 ClearColor = { 0.1f, 0.1f, 0.1f, 1.0f };
-		// Future: color/depth attachments
-	};
+    struct FramebufferSpecification
+    {
+        uint32_t Width = 1920;
+        uint32_t Height = 1080;
+        glm::vec4 ClearColor = { 0.1f, 0.1f, 0.1f, 1.0f };
+    };
 
-	class Framebuffer
-	{
-	public:
-		virtual ~Framebuffer() = default;
+    class Framebuffer
+    {
+    public:
+        virtual ~Framebuffer() = default;
 
-		virtual void Bind() = 0;
-		virtual void Unbind() = 0;
+        virtual void Bind() = 0;
+        virtual void Unbind() = 0;
+        virtual void Resize(uint32_t width, uint32_t height) = 0;
+        virtual uint32_t GetColorAttachmentRendererID() const = 0;
 
-		virtual void Resize(uint32_t width, uint32_t height) = 0;
+        const FramebufferSpecification& GetSpecification() const { return m_Specification; }
+        static std::shared_ptr<Framebuffer> Create(const FramebufferSpecification& spec);
 
-		virtual uint32_t GetColorAttachmentRendererID() const = 0;
-
-		const FramebufferSpecification& GetSpecification() const { return m_Specification; }
-	
-	protected:
-		FramebufferSpecification m_Specification;
-	};
+    protected:
+        FramebufferSpecification m_Specification;
+    };
 }

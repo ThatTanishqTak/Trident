@@ -13,6 +13,9 @@ namespace Engine
 		void Init();
 		void Shutdown();
 
+		int GetWidth() { return m_WindowAPI->GetWidth(); }
+		int GetHeight() { return m_WindowAPI->GetHeight(); }
+
 		// Returns GLFWwindow* as the native window
 		GLFWwindow* GetWindow() const;
 
