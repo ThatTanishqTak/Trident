@@ -13,8 +13,11 @@ namespace Engine
     {
     public:
         void Init(GLFWwindow* window);
+        void SetupViewport();
+
         void Begin();
         void End();
+
         void Shutdown();
     };
 }

@@ -1,4 +1,4 @@
-#include "Application.h"
+﻿#include "Application.h"
 #include <GLFW/glfw3.h>
 #include "Renderer/RenderCommand.h"
 #include "Renderer/OpenGL/OpenGLRenderPass.h"
@@ -38,17 +38,11 @@ void Application::Run()
         Engine::Renderer::EndScene();
         m_SceneFramebuffer->Unbind();
 
-        // 2) Render UI and viewport
+        // Render UI and viewport
         m_ImGuiLayer->Begin();
+        
         RenderUI();
-
-        // Scene Viewport panel
-        ImGui::Begin("Scene Viewport");
-        ImVec2 avail = ImGui::GetContentRegionAvail();
-        GLuint texID = m_SceneFramebuffer->GetColorAttachmentRendererID();
-        ImGui::Image((ImTextureID)(uintptr_t)texID, avail);
-        ImGui::End();
-
+        
         m_ImGuiLayer->End();
 
         // 3) Present
@@ -146,10 +140,60 @@ void Application::RenderScene()
 
 void Application::RenderUI()
 {
-    ImGui::Begin("Hello from Trident");
-    ImGui::DockSpaceOverViewport();
+    static bool p_open = true;
+    static bool opt_fullscreen = true;
+    static bool opt_padding = false;
+    static ImGuiDockNodeFlags dockspace_flags = ImGuiDockNodeFlags_None;
+
+    // We are creating a full-screen dockspace window
+    ImGuiWindowFlags window_flags = ImGuiWindowFlags_MenuBar | ImGuiWindowFlags_NoDocking;
+    if (opt_fullscreen)
+    {
+        ImGuiViewport* viewport = ImGui::GetMainViewport();
+        ImGui::SetNextWindowPos(viewport->WorkPos);
+        ImGui::SetNextWindowSize(viewport->WorkSize);
+        ImGui::SetNextWindowViewport(viewport->ID);
+        ImGui::PushStyleVar(ImGuiStyleVar_WindowRounding, 0.0f);
+        ImGui::PushStyleVar(ImGuiStyleVar_WindowBorderSize, 0.0f);
+        window_flags |= ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoCollapse |
+            ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove;
+        window_flags |= ImGuiWindowFlags_NoBringToFrontOnFocus | ImGuiWindowFlags_NoNavFocus;
+    }
+
+    if (!opt_padding)
+        ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(0.0f, 0.0f));
+
+    ImGui::Begin("DockSpace Demo", &p_open, window_flags);
+
+    if (!opt_padding)
+        ImGui::PopStyleVar();
+
+    if (opt_fullscreen)
+        ImGui::PopStyleVar(2);
+
+    // DockSpace
+    ImGuiIO& io = ImGui::GetIO();
+    if (io.ConfigFlags & ImGuiConfigFlags_DockingEnable)
+    {
+        ImGuiID dockspace_id = ImGui::GetID("MyDockspace");
+        ImGui::DockSpace(dockspace_id, ImVec2(0.0f, 0.0f), dockspace_flags);
+    }
+
+    ImGui::End();
+
+    // === SETTINGS PANEL ===
+    ImGui::Begin("Settings");
     ImGui::Text("FPS: %.1f", ImGui::GetIO().Framerate);
     ImGui::DragFloat("Rotation", &r, 1.0f, 0.0f, 360.0f);
+    ImGui::End();
+
+    // === SCENE VIEWPORT ===
+    ImGui::Begin("Scene Viewport");
+
+    // Ensure the framebuffer texture is valid and draw it
+    ImTextureID texID = (ImTextureID)(uintptr_t)m_SceneFramebuffer->GetColorAttachmentRendererID();
+    ImVec2 viewportPanelSize = ImGui::GetContentRegionAvail();
+    ImGui::Image(texID, viewportPanelSize, ImVec2(0, 1), ImVec2(1, 0)); // Flip vertically
     ImGui::End();
 }
 
