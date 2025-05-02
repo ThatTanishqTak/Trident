@@ -37,9 +37,9 @@ void Application::Run()
         m_SceneFramebuffer->Unbind();
 
         m_ImGuiLayer->Begin();
-        
+
         RenderUI();
-        
+
         m_ImGuiLayer->End();
 
         glfwPollEvents();
@@ -51,7 +51,6 @@ void Application::Init()
 {
     s_Instance = this;
 
-    // Initialize subsystems
     Engine::Time::Init();
 
     m_Window = std::make_shared<Engine::WindowsWindow>();
@@ -60,43 +59,38 @@ void Application::Init()
     m_Renderer = std::make_shared<Engine::Renderer>();
     m_Renderer->Init();
 
-    // Create offscreen framebuffer
     Engine::FramebufferSpecification fbSpec;
     fbSpec.Width = m_Window->GetWidth();
     fbSpec.Height = m_Window->GetHeight();
     fbSpec.ClearColor = { 0.1f, 0.1f, 0.1f, 1.0f };
     m_SceneFramebuffer = Engine::Framebuffer::Create(fbSpec);
 
-    // Default render pass (for UI overlays)
     Engine::RenderPassSpecification renderPassSpec;
     renderPassSpec.ClearColor = fbSpec.ClearColor;
     renderPassSpec.TargetFramebuffer = m_SceneFramebuffer;
     m_RenderPass = std::make_shared<Engine::OpenGLRenderPass>(renderPassSpec);
 
-    // Camera setup
     float aspect = (float)m_Window->GetWidth() / (float)m_Window->GetHeight();
     m_CameraController = std::make_shared<Engine::CameraController>(aspect);
     m_Camera = std::make_unique<Engine::PerspectiveCamera>(m_CameraController->GetCamera());
 
-    // ImGui setup
     m_ImGuiLayer = std::make_unique<Engine::ImGuiLayer>();
     m_ImGuiLayer->Init(m_Window->GetWindow());
 
-    // Mesh, buffers, shader
-    float vertices[] =
-    {
-        // Positions        // Colors
-        -0.5f, -0.5f, -0.5f,   1.0f, 0.0f, 0.0f, 1.0f,
-         0.5f, -0.5f, -0.5f,   0.0f, 1.0f, 0.0f, 1.0f,
-         0.5f,  0.5f, -0.5f,   0.0f, 0.0f, 1.0f, 1.0f,
-        -0.5f,  0.5f, -0.5f,   1.0f, 1.0f, 0.0f, 1.0f,
-        -0.5f, -0.5f,  0.5f,   1.0f, 0.0f, 1.0f, 1.0f,
-         0.5f, -0.5f,  0.5f,   0.0f, 1.0f, 1.0f, 1.0f,
-         0.5f,  0.5f,  0.5f,   1.0f, 1.0f, 1.0f, 1.0f,
-        -0.5f,  0.5f,  0.5f,   0.5f, 0.5f, 0.5f, 1.0f,
+    float vertices[] = {
+        // Position         // Color               // Normal
+        -0.5f, -0.5f, -0.5f,   1,0,0,1,              0, 0, -1,
+         0.5f, -0.5f, -0.5f,   0,1,0,1,              0, 0, -1,
+         0.5f,  0.5f, -0.5f,   0,0,1,1,              0, 0, -1,
+        -0.5f,  0.5f, -0.5f,   1,1,0,1,              0, 0, -1,
+
+        -0.5f, -0.5f,  0.5f,   1,0,1,1,              0, 0, 1,
+         0.5f, -0.5f,  0.5f,   0,1,1,1,              0, 0, 1,
+         0.5f,  0.5f,  0.5f,   1,1,1,1,              0, 0, 1,
+        -0.5f,  0.5f,  0.5f,   0.5,0.5,0.5,1,        0, 0, 1
     };
-    uint32_t indices[] =
-    {
+
+    uint32_t indices[] = {
         0,1,2, 2,3,0,
         4,5,6, 6,7,4,
         4,5,1, 1,0,4,
@@ -108,7 +102,8 @@ void Application::Init()
     auto vertexBuffer = Engine::VertexBuffer::Create(vertices, sizeof(vertices));
     Engine::BufferLayout layout = {
         { Engine::ShaderDataType::Float3, "a_Position" },
-        { Engine::ShaderDataType::Float4, "a_Color" }
+        { Engine::ShaderDataType::Float4, "a_Color" },
+        { Engine::ShaderDataType::Float3, "a_Normal" }
     };
     vertexBuffer->SetLayout(layout);
 
@@ -118,22 +113,57 @@ void Application::Init()
     m_VertexArray->AddVertexBuffer(vertexBuffer);
     m_VertexArray->SetIndexBuffer(indexBuffer);
 
-    m_Shader = Engine::Shader::Create("Shaders/Basic.vert", "Shaders/Basic.frag");
+    m_Shader = Engine::Shader::Create("Assets/Shaders/Basic.vert", "Assets/Shaders/Basic.frag");
+
+    m_CubePosition = { 0.0f, 0.0f, 0.0f };
+    m_CubeScale = { 1.0f, 1.0f, 1.0f };
+    m_CubeRotation = { 0.0f, 0.0f, 0.0f };
+    m_LightPosition = { 2.0f, 4.0f, 2.0f };
 }
 
 void Application::RenderScene()
 {
     m_Shader->Bind();
 
-    // Rotate model
-    glm::mat4 model = glm::rotate(glm::mat4(1.0f), glm::radians(r), glm::vec3(1.0f, 1.0f, 0.0f));
+    glm::mat4 model = glm::translate(glm::mat4(1.0f), m_CubePosition)
+        * glm::rotate(glm::mat4(1.0f), glm::radians(m_CubeRotation.x), glm::vec3(1, 0, 0))
+        * glm::rotate(glm::mat4(1.0f), glm::radians(m_CubeRotation.y), glm::vec3(0, 1, 0))
+        * glm::rotate(glm::mat4(1.0f), glm::radians(m_CubeRotation.z), glm::vec3(0, 0, 1))
+        * glm::scale(glm::mat4(1.0f), m_CubeScale);
+
     glm::mat4 viewProj = m_Camera->GetViewProjectionMatrix();
 
     m_Shader->SetUniformMat4("u_Model", model);
     m_Shader->SetUniformMat4("u_ViewProjection", viewProj);
 
+    m_Shader->SetUniformFloat3("u_LightPos", m_LightPosition);
+    m_Shader->SetUniformFloat3("u_ViewPos", m_CameraController->GetCamera().GetPosition());
+
     m_VertexArray->Bind();
     Engine::Renderer::DrawIndexed(m_VertexArray);
+}
+
+void Application::OnEvent(Engine::Event& e)
+{
+    Engine::EventDispatcher dispatcher(e);
+    dispatcher.Dispatch<Engine::WindowResizeEvent>([this](Engine::WindowResizeEvent& ev)
+        {
+            m_Width = ev.GetWidth();
+            m_Height = ev.GetHeight();
+
+            m_SceneFramebuffer->Resize(m_Width, m_Height);
+            m_Camera->RecalculateView();
+
+            return false;
+        });
+
+    dispatcher.Dispatch<Engine::MouseScrolledEvent>([this](Engine::MouseScrolledEvent& ev)
+        {
+            m_CameraController->OnScroll(0.1f);
+            m_Camera->RecalculateView();
+
+            return false;
+        });
 }
 
 void Application::RenderUI()
@@ -143,7 +173,6 @@ void Application::RenderUI()
     static bool opt_padding = false;
     static ImGuiDockNodeFlags dockspace_flags = ImGuiDockNodeFlags_None;
 
-    // We are creating a full-screen dockspace window
     ImGuiWindowFlags window_flags = ImGuiWindowFlags_MenuBar | ImGuiWindowFlags_NoDocking;
     if (opt_fullscreen)
     {
@@ -165,16 +194,10 @@ void Application::RenderUI()
     ImGui::Begin("DockSpace Demo", &p_open, window_flags);
     {
         if (!opt_padding)
-        {
             ImGui::PopStyleVar();
-        }
-
         if (opt_fullscreen)
-        {
             ImGui::PopStyleVar(2);
-        }
 
-        // DockSpace
         ImGuiIO& io = ImGui::GetIO();
         if (io.ConfigFlags & ImGuiConfigFlags_DockingEnable)
         {
@@ -184,21 +207,21 @@ void Application::RenderUI()
     }
     ImGui::End();
 
-    // === SETTINGS PANEL ===
     ImGui::Begin("Settings");
     {
         ImGui::Text("FPS: %.1f", ImGui::GetIO().Framerate);
-        ImGui::DragFloat("Rotation", &r, 1.0f, 0.0f, 360.0f);
+        ImGui::DragFloat3("Cube Position", &m_CubePosition.x, 0.1f);
+        ImGui::DragFloat3("Cube Size", &m_CubeScale.x, 0.1f);
+        ImGui::DragFloat3("Cube Rotation", &m_CubeRotation.x, 1.0f);
+        ImGui::DragFloat3("Light Position", &m_LightPosition.x, 0.1f);
     }
     ImGui::End();
 
-    // === SCENE VIEWPORT ===
     ImGui::Begin("Scene Viewport");
     {
-        // Ensure the framebuffer texture is valid and draw it
         ImTextureID texID = (ImTextureID)(uintptr_t)m_SceneFramebuffer->GetColorAttachmentRendererID();
         ImVec2 viewportPanelSize = ImGui::GetContentRegionAvail();
-        ImGui::Image(texID, viewportPanelSize, ImVec2(0, 1), ImVec2(1, 0)); // Flip vertically
+        ImGui::Image(texID, viewportPanelSize, ImVec2(0, 1), ImVec2(1, 0));
     }
     ImGui::End();
 }
@@ -207,6 +230,6 @@ void Application::Shutdown()
 {
     m_ImGuiLayer->Shutdown();
     m_Window->Shutdown();
-    
+
     s_Instance = nullptr;
 }

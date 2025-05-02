@@ -4,7 +4,7 @@
 
 namespace Engine
 {
-    CameraController::CameraController(float aspectRatio, bool rotation) : m_Camera(45.0f, aspectRatio, 0.1f, 100.0f), m_AspectRatio(aspectRatio), m_Rotation(rotation)
+    CameraController::CameraController(float aspectRatio, bool rotation) : m_Camera(45.0f, aspectRatio, 0.01f, 1000.0f), m_AspectRatio(aspectRatio), m_Rotation(rotation)
     {
 
     }

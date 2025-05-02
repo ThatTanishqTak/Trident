@@ -51,9 +51,9 @@ set_target_properties(Trident-Forge PROPERTIES
     LIBRARY_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR}/bin/${OUTPUT_DIR}
 )
 
-# Copy shader files after build to the output directory
+# Copy assets after build to the output directory
 add_custom_command(TARGET Trident-Forge POST_BUILD
     COMMAND ${CMAKE_COMMAND} -E copy_directory
-    "${CMAKE_SOURCE_DIR}/Trident-Forge/Shaders"
-    "$<TARGET_FILE_DIR:Trident-Forge>/Shaders"
+    "${CMAKE_SOURCE_DIR}/Trident-Forge/Assets"
+    "$<TARGET_FILE_DIR:Trident-Forge>/Assets"
 )

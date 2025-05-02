@@ -4,6 +4,11 @@
 
 #include "WindowsWindow/WindowsWindow.h"
 
+#include "Events/Event.h"
+#include "Events/ApplicationEvent.h"
+#include "Events/KeyEvent.h"
+#include "Events/MouseEvent.h"
+
 #include "Renderer/Renderer.h"
 #include "Renderer/VertexArray.h"
 #include "Renderer/Framebuffer.h"
@@ -13,6 +18,7 @@
 
 #include "Camera/CameraController.h"
 #include "Camera/PerspectiveCamera.h"
+#include "Camera/EditorCamera.h"
 
 #include "ImGui/ImGuiLayer.h"
 
@@ -33,6 +39,8 @@ private:
 	void RenderUI();
 	void RenderScene();
 
+	void OnEvent(Engine::Event& e);
+
 private:
 	static Application* s_Instance;
 
@@ -46,9 +54,19 @@ private:
 
 	std::shared_ptr<Engine::CameraController> m_CameraController;
 	std::unique_ptr<Engine::PerspectiveCamera> m_Camera;
+	std::unique_ptr<Engine::EditorCamera> m_EditorCamera;
 
 	std::unique_ptr<Engine::ImGuiLayer> m_ImGuiLayer;
 
+	int m_Width = 1920;
+	int m_Height = 1080;
+
 private:
-	float r = 0.0f;
+	// Cube transformation properties
+	glm::vec3 m_CubePosition = glm::vec3(0.0f);
+	glm::vec3 m_CubeScale = glm::vec3(1.0f);
+	glm::vec3 m_CubeRotation = glm::vec3(0.0f); // Rotation in degrees for X, Y, Z
+
+	// Lighting
+	glm::vec3 m_LightPosition = glm::vec3(2.0f, 4.0f, 2.0f);
 };

@@ -9,6 +9,8 @@ namespace Engine
         ImGui::CreateContext();
 
         ImGuiIO& io = ImGui::GetIO(); (void)io;
+        io.Fonts->AddFontFromFileTTF("Assets/Fonts/JetBrainsMonoNerdFont-Regular.ttf", 18.0f);
+
         io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;
         io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;
         io.ConfigFlags |= ImGuiConfigFlags_ViewportsEnable;

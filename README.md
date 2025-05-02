@@ -1,50 +1,51 @@
-# Trident 🛠️💥
+# Trident
 
-**Trident** is a modular, real-time 3D physics engine built in C++ using OpenGL for rendering and GLFW for context/window management. It is designed to power simulations and games, featuring a level editor (`Forge`) built with ImGui and ImGuizmo for intuitive scene interaction.
+**Trident** is a modular, real-time 3D physics engine developed in C++ using OpenGL for rendering and GLFW for window and context management. It is designed for simulations and game development, and includes a level editor (`Trident-Forge`) built with ImGui and ImGuizmo (in progress) for interactive scene editing.
 
 ---
 
 ## Features
 
-- 🔷 **Cross-platform 3D Physics Engine**
-  - Custom physics simulation (WIP)
-  - Modular architecture for core engine and application layer
+### 3D Physics Engine
+- In-progress custom physics simulation
+- Modular architecture separating core engine and application layers
 
-- 🖼️ **Editor Viewport**
-  - Real-time scene rendering with framebuffer-based viewport
-  - ImGui UI integration for controls, tools, and future entity systems
+### Editor Viewport
+- Real-time scene rendering with a framebuffer-based viewport
+- ImGui integration for UI controls and tools
+- Support for an entity system (planned)
 
-- 🧰 **Rendering**
-  - OpenGL 4.3 core profile
-  - Shader abstraction and uniform management
-  - GLM for math and transformations
+### Rendering System
+- OpenGL 4.3 core profile
+- Shader abstraction with support for uniform management
+- GLM-based mathematical operations and transformations
 
-- 🏗️ **Custom Engine Structure**
-  - `Trident` – dynamic library with rendering, window, event, and physics code
-  - `Forge` – level editor using ImGui and OpenGL
-  - CMake build system with modern presets and organized output
+### Engine Structure
+- **Trident** – core static library containing rendering, windowing, event handling, and physics systems
+- **Trident-Forge** – standalone level editor built on top of the engine
+- Modern CMake-based build system with organized binary and intermediate output directories
 
 ---
 
 ## Screenshots
 
 <p align="center">
-  <img src="Assets/Screenshots/Viewport.png" width="600" alt="Viewport Panel">
+  <img src="Resources/Screenshots/Viewport.png" width="600" alt="Viewport Panel">
 </p>
 
 ---
 
 ## Getting Started
 
-### 📦 Prerequisites
+### Prerequisites
 
 - C++20 compatible compiler (tested with MSVC)
-- [CMake](https://cmake.org/) ≥ 3.22
+- [CMake](https://cmake.org/) version 3.22 or newer
 - Git
-- OpenGL drivers
-- Windows OS (currently tested platform)
+- OpenGL-compatible graphics drivers
+- Windows (primary tested platform)
 
-### 📁 Clone the Repository
+### Clone the Repository
 
 ```bash
 git clone --recursive https://github.com/ThatTanishqTak/Trident.git

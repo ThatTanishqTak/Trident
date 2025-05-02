@@ -9,6 +9,7 @@ namespace Engine
 	void OpenGLRenderer::Init()
 	{
 		glEnable(GL_DEPTH_TEST);
+		glEnable(GL_FRAMEBUFFER_SRGB);
 	}
 
 	void OpenGLRenderer::SetClearColor(const glm::vec4& color)
