@@ -11,28 +11,25 @@ out vec4 FragColor;
 
 void main()
 {
-    // Properties
+    // Configurable properties
     vec3 ambientColor = vec3(0.1);
-    vec3 lightColor = vec3(1.0);
+    vec3 lightColor   = vec3(1.0);
+    float shininess   = 64.0;
+    float specStrength = 0.6;
 
-    // Ambient
-    vec3 ambient = ambientColor * lightColor;
-
-    // Diffuse
+    // Normalize inputs
     vec3 norm = normalize(v_Normal);
     vec3 lightDir = normalize(u_LightPos - v_FragPos);
-    float diff = max(dot(norm, lightDir), 0.0);
-    vec3 diffuse = diff * lightColor;
-
-    // Specular
-    float specularStrength = 0.5;
     vec3 viewDir = normalize(u_ViewPos - v_FragPos);
     vec3 reflectDir = reflect(-lightDir, norm);
 
-    float spec = pow(max(dot(viewDir, reflectDir), 0.0), 32);
-    vec3 specular = specularStrength * spec * lightColor;
+    // Components
+    vec3 ambient  = ambientColor * lightColor;
+    float diff    = max(dot(norm, lightDir), 0.0);
+    vec3 diffuse  = diff * lightColor;
+    float spec    = pow(max(dot(viewDir, reflectDir), 0.0), shininess);
+    vec3 specular = specStrength * spec * lightColor;
 
-    vec3 finalColor = (ambient + diffuse + specular) * v_Color.rgb;
-
-    FragColor = vec4(finalColor, v_Color.a);
+    vec3 lighting = (ambient + diffuse + specular) * v_Color.rgb;
+    FragColor = vec4(lighting, v_Color.a);
 }

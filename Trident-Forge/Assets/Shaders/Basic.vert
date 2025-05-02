@@ -15,7 +15,11 @@ void main()
 {
     vec4 worldPosition = u_Model * vec4(a_Position, 1.0);
     v_FragPos = worldPosition.xyz;
-    v_Normal = mat3(transpose(inverse(u_Model))) * a_Normal;
+
+    // Use normal matrix for correct normal transformation
+    mat3 normalMatrix = transpose(inverse(mat3(u_Model)));
+    v_Normal = normalize(normalMatrix * a_Normal);
+
     v_Color = a_Color;
 
     gl_Position = u_ViewProjection * worldPosition;

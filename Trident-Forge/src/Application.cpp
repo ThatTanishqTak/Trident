@@ -78,32 +78,70 @@ void Application::Init()
     m_ImGuiLayer->Init(m_Window->GetWindow());
 
     float vertices[] = {
-        // Position         // Color               // Normal
-        -0.5f, -0.5f, -0.5f,   1,0,0,1,              0, 0, -1,
-         0.5f, -0.5f, -0.5f,   0,1,0,1,              0, 0, -1,
-         0.5f,  0.5f, -0.5f,   0,0,1,1,              0, 0, -1,
-        -0.5f,  0.5f, -0.5f,   1,1,0,1,              0, 0, -1,
+        // Back face (−Z)
+        -0.5f, -0.5f, -0.5f,  1, 0, 0, 1,  0, 0, -1,
+         0.5f, -0.5f, -0.5f,  0, 1, 0, 1,  0, 0, -1,
+         0.5f,  0.5f, -0.5f,  0, 0, 1, 1,  0, 0, -1,
+        -0.5f,  0.5f, -0.5f,  1, 1, 0, 1,  0, 0, -1,
 
-        -0.5f, -0.5f,  0.5f,   1,0,1,1,              0, 0, 1,
-         0.5f, -0.5f,  0.5f,   0,1,1,1,              0, 0, 1,
-         0.5f,  0.5f,  0.5f,   1,1,1,1,              0, 0, 1,
-        -0.5f,  0.5f,  0.5f,   0.5,0.5,0.5,1,        0, 0, 1
+        // Front face (+Z)
+        -0.5f, -0.5f,  0.5f,  1, 0, 1, 1,  0, 0, 1,
+         0.5f, -0.5f,  0.5f,  0, 1, 1, 1,  0, 0, 1,
+         0.5f,  0.5f,  0.5f,  1, 1, 1, 1,  0, 0, 1,
+        -0.5f,  0.5f,  0.5f,  0.5, 0.5, 0.5, 1,  0, 0, 1,
+
+        // Left face (−X)
+        -0.5f, -0.5f,  0.5f,  1, 0, 1, 1,  -1, 0, 0,
+        -0.5f, -0.5f, -0.5f,  1, 0, 0, 1,  -1, 0, 0,
+        -0.5f,  0.5f, -0.5f,  1, 1, 0, 1,  -1, 0, 0,
+        -0.5f,  0.5f,  0.5f,  0.5, 0.5, 0.5, 1,  -1, 0, 0,
+
+        // Right face (+X)
+         0.5f, -0.5f, -0.5f,  0, 1, 0, 1,  1, 0, 0,
+         0.5f, -0.5f,  0.5f,  0, 1, 1, 1,  1, 0, 0,
+         0.5f,  0.5f,  0.5f,  1, 1, 1, 1,  1, 0, 0,
+         0.5f,  0.5f, -0.5f,  0, 0, 1, 1,  1, 0, 0,
+
+         // Bottom face (−Y)
+         -0.5f, -0.5f, -0.5f,  1, 0, 0, 1,  0, -1, 0,
+          0.5f, -0.5f, -0.5f,  0, 1, 0, 1,  0, -1, 0,
+          0.5f, -0.5f,  0.5f,  0, 1, 1, 1,  0, -1, 0,
+         -0.5f, -0.5f,  0.5f,  1, 0, 1, 1,  0, -1, 0,
+
+         // Top face (+Y)
+         -0.5f,  0.5f, -0.5f,  1, 1, 0, 1,  0, 1, 0,
+          0.5f,  0.5f, -0.5f,  0, 0, 1, 1,  0, 1, 0,
+          0.5f,  0.5f,  0.5f,  1, 1, 1, 1,  0, 1, 0,
+         -0.5f,  0.5f,  0.5f,  0.5, 0.5, 0.5, 1,  0, 1, 0,
     };
 
-    uint32_t indices[] = {
-        0,1,2, 2,3,0,
-        4,5,6, 6,7,4,
-        4,5,1, 1,0,4,
-        7,6,2, 2,3,7,
-        4,0,3, 3,7,4,
-        5,1,2, 2,6,5
+    uint32_t indices[] =
+    {
+         // Back face
+         0, 1, 2, 2, 3, 0,
+
+         // Front face
+         4, 5, 6, 6, 7, 4,
+
+         // Left face
+         8, 9,10,10,11, 8,
+
+         // Right face
+         12,13,14,14,15,12,
+
+         // Bottom face
+         16,17,18,18,19,16,
+
+         // Top face
+         20,21,22,22,23,20
     };
 
     auto vertexBuffer = Engine::VertexBuffer::Create(vertices, sizeof(vertices));
-    Engine::BufferLayout layout = {
+    Engine::BufferLayout layout =
+    {
         { Engine::ShaderDataType::Float3, "a_Position" },
-        { Engine::ShaderDataType::Float4, "a_Color" },
-        { Engine::ShaderDataType::Float3, "a_Normal" }
+        { Engine::ShaderDataType::Float4, "a_Color"    },
+        { Engine::ShaderDataType::Float3, "a_Normal"   }
     };
     vertexBuffer->SetLayout(layout);
 
@@ -115,10 +153,10 @@ void Application::Init()
 
     m_Shader = Engine::Shader::Create("Assets/Shaders/Basic.vert", "Assets/Shaders/Basic.frag");
 
-    m_CubePosition = { 0.0f, 0.0f, 0.0f };
-    m_CubeScale = { 1.0f, 1.0f, 1.0f };
-    m_CubeRotation = { 0.0f, 0.0f, 0.0f };
-    m_LightPosition = { 2.0f, 4.0f, 2.0f };
+    m_CubePosition =    { 0.0f, 0.0f, 0.0f };
+    m_CubeScale =       { 1.0f, 1.0f, 1.0f };
+    m_CubeRotation =    { 0.0f, 0.0f, 0.0f };
+    m_LightPosition =   { 2.0f, 4.0f, 2.0f };
 }
 
 void Application::RenderScene()
@@ -147,23 +185,23 @@ void Application::OnEvent(Engine::Event& e)
 {
     Engine::EventDispatcher dispatcher(e);
     dispatcher.Dispatch<Engine::WindowResizeEvent>([this](Engine::WindowResizeEvent& ev)
-        {
-            m_Width = ev.GetWidth();
-            m_Height = ev.GetHeight();
+    {
+        m_Width = ev.GetWidth();
+        m_Height = ev.GetHeight();
 
-            m_SceneFramebuffer->Resize(m_Width, m_Height);
-            m_Camera->RecalculateView();
+        m_SceneFramebuffer->Resize(m_Width, m_Height);
+        m_Camera->RecalculateView();
 
-            return false;
-        });
+        return false;
+    });
 
     dispatcher.Dispatch<Engine::MouseScrolledEvent>([this](Engine::MouseScrolledEvent& ev)
-        {
-            m_CameraController->OnScroll(0.1f);
-            m_Camera->RecalculateView();
+    {
+        m_CameraController->OnScroll(0.1f);
+        m_Camera->RecalculateView();
 
-            return false;
-        });
+        return false;
+    });
 }
 
 void Application::RenderUI()
@@ -171,6 +209,7 @@ void Application::RenderUI()
     static bool p_open = true;
     static bool opt_fullscreen = true;
     static bool opt_padding = false;
+    
     static ImGuiDockNodeFlags dockspace_flags = ImGuiDockNodeFlags_None;
 
     ImGuiWindowFlags window_flags = ImGuiWindowFlags_MenuBar | ImGuiWindowFlags_NoDocking;
@@ -182,6 +221,7 @@ void Application::RenderUI()
         ImGui::SetNextWindowViewport(viewport->ID);
         ImGui::PushStyleVar(ImGuiStyleVar_WindowRounding, 0.0f);
         ImGui::PushStyleVar(ImGuiStyleVar_WindowBorderSize, 0.0f);
+        
         window_flags |= ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove;
         window_flags |= ImGuiWindowFlags_NoBringToFrontOnFocus | ImGuiWindowFlags_NoNavFocus;
     }
@@ -194,9 +234,14 @@ void Application::RenderUI()
     ImGui::Begin("DockSpace Demo", &p_open, window_flags);
     {
         if (!opt_padding)
+        {
             ImGui::PopStyleVar();
+        }
+
         if (opt_fullscreen)
+        {
             ImGui::PopStyleVar(2);
+        }
 
         ImGuiIO& io = ImGui::GetIO();
         if (io.ConfigFlags & ImGuiConfigFlags_DockingEnable)
@@ -207,6 +252,15 @@ void Application::RenderUI()
     }
     ImGui::End();
 
+    ImGui::Begin("Scene Viewport");
+    {
+        ImTextureID texID = (ImTextureID)(uintptr_t)m_SceneFramebuffer->GetColorAttachmentRendererID();
+        ImVec2 viewportPanelSize = ImGui::GetContentRegionAvail();
+        
+        ImGui::Image(texID, viewportPanelSize, ImVec2(0, 1), ImVec2(1, 0));
+    }
+    ImGui::End();
+
     ImGui::Begin("Settings");
     {
         ImGui::Text("FPS: %.1f", ImGui::GetIO().Framerate);
@@ -214,14 +268,6 @@ void Application::RenderUI()
         ImGui::DragFloat3("Cube Size", &m_CubeScale.x, 0.1f);
         ImGui::DragFloat3("Cube Rotation", &m_CubeRotation.x, 1.0f);
         ImGui::DragFloat3("Light Position", &m_LightPosition.x, 0.1f);
-    }
-    ImGui::End();
-
-    ImGui::Begin("Scene Viewport");
-    {
-        ImTextureID texID = (ImTextureID)(uintptr_t)m_SceneFramebuffer->GetColorAttachmentRendererID();
-        ImVec2 viewportPanelSize = ImGui::GetContentRegionAvail();
-        ImGui::Image(texID, viewportPanelSize, ImVec2(0, 1), ImVec2(1, 0));
     }
     ImGui::End();
 }
