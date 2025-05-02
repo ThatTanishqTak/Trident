@@ -30,7 +30,7 @@
 ## Screenshots
 
 <p align="center">
-  <img src="Resources/Screenshots/Viewport.png" width="600" alt="Viewport Panel">
+  <img src="Resources/Screenshots/Demo.png" width="600" alt="Viewport Panel">
 </p>
 
 ---
