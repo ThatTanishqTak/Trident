@@ -19,6 +19,8 @@ namespace Engine
 		int GetWidth() const override;
 		int GetHeight() const override;
 
+		void CloseWindow() const override;
+
 	private:
 		GLFWwindow* m_Window = nullptr;
 

@@ -62,6 +62,11 @@ namespace Engine
 		return m_Height;
 	}
 
+	void OpenGLWindow::CloseWindow() const
+	{
+		glfwSetWindowShouldClose(m_Window, GLFW_TRUE);
+	}
+
 	void OpenGLWindow::GLFWErrorCallback(int error, const char* description)
 	{
 		std::cerr << "[GLFW Error] (" << error << "): " << description << std::endl;

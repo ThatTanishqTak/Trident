@@ -21,6 +21,8 @@ namespace Engine
 		virtual int GetWidth() const = 0;
 		virtual int GetHeight() const = 0;
 
+		virtual void CloseWindow() const = 0;
+
 		static WindowAPIType GetAPI();
 		static std::unique_ptr<WindowAPI> Create();
 	};

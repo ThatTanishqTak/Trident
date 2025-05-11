@@ -5,6 +5,7 @@ layout(location = 1) in vec4 a_Color;
 layout(location = 2) in vec3 a_Normal;
 
 uniform mat4 u_Model;
+uniform mat4 u_View;
 uniform mat4 u_ViewProjection;
 
 out vec3 v_FragPos;

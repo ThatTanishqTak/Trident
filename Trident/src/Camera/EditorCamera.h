@@ -1,10 +1,13 @@
 #pragma once
+
+#include "Camera/Camera.h"
+
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 
 namespace Engine
 {
-    class EditorCamera
+    class EditorCamera : public Camera
     {
     public:
         EditorCamera(float fov, float aspectRatio, float nearClip, float farClip);
@@ -19,9 +22,9 @@ namespace Engine
         const glm::mat4& GetViewMatrix() const { return m_ViewMatrix; }
         const glm::mat4& GetViewProjection() const { return m_ViewProjectionMatrix; }
 
-    private:
         void UpdateView();
         void UpdateProjection();
+    private:
 
     private:
         glm::vec3 m_Position = { 0.0f, 0.0f, 5.0f };
