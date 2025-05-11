@@ -49,5 +49,10 @@
 
 ```bash
 git clone --recursive https://github.com/ThatTanishqTak/Trident.git
+```
+
+### Build the Project
+
+```bash
 cd Trident/Scripts
 Build-Windows.bat
