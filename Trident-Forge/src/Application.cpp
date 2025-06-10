@@ -185,25 +185,7 @@ void Application::RenderScene()
 
 void Application::OnEvent(Engine::Event& e)
 {
-    Engine::EventDispatcher l_Dispatcher(e);
-    l_Dispatcher.Dispatch<Engine::WindowResizeEvent>([this](Engine::WindowResizeEvent& ev)
-    {
-        m_Width = ev.GetWidth();
-        m_Height = ev.GetHeight();
 
-        m_SceneFramebuffer->Resize(m_Width, m_Height);
-        m_Camera->RecalculateView();
-
-        return false;
-    });
-
-    l_Dispatcher.Dispatch<Engine::MouseScrolledEvent>([this](Engine::MouseScrolledEvent& ev)
-    {
-        m_CameraController->OnScroll(0.5f);
-        m_Camera->RecalculateView();
-
-        return false;
-    });
 }
 
 void Application::RenderUI()

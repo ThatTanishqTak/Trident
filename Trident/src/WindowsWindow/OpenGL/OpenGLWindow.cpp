@@ -35,7 +35,6 @@ namespace Engine
 		glfwMakeContextCurrent(m_Window);
 
 		glfwSetErrorCallback(GLFWErrorCallback);
-		glfwSetWindowUserPointer(m_Window, this);
 
 		if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress))
 		{

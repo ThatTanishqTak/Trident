@@ -1,5 +1,7 @@
 #pragma once
 
+#include "Events/Event.h"
+
 #include <memory>
 #include <functional>
 
@@ -10,6 +12,8 @@ namespace Engine
 		None = 0,
 		OpenGL
 	};
+
+	using EventCallbackFn = std::function<void(Event&)>;
 
 	class WindowAPI
 	{
@@ -22,6 +26,8 @@ namespace Engine
 		virtual int GetHeight() const = 0;
 
 		virtual void CloseWindow() const = 0;
+
+		virtual void SetEventCallback(const EventCallbackFn& callback) = 0;
 
 		static WindowAPIType GetAPI();
 		static std::unique_ptr<WindowAPI> Create();

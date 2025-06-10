@@ -21,8 +21,11 @@ namespace Engine
 
 		void CloseWindow() const override;
 
+		void SetEventCallback(const EventCallbackFn& callback) override { m_EventCallback = callback; }
+
 	private:
 		GLFWwindow* m_Window = nullptr;
+		EventCallbackFn m_EventCallback;
 
 		static void GLFWErrorCallback(int error, const char* description);
 

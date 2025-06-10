@@ -4,8 +4,8 @@
 #include <string>
 #include <sstream>
 
-namespace Engine {
-
+namespace Engine
+{
 	enum class EventType
 	{
 		None = 0,
