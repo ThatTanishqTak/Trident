@@ -6,6 +6,8 @@ in vec4 v_Color;
 
 uniform vec3 u_LightPos;
 uniform vec3 u_ViewPos;
+uniform vec3 u_LightColor;
+uniform float u_LightIntensity;
 
 out vec4 FragColor;
 
@@ -13,7 +15,7 @@ void main()
 {
     // Configurable properties
     vec3 ambientColor = vec3(0.1);
-    vec3 lightColor   = vec3(1.0);
+    vec3 lightColor   = u_LightColor * u_LightIntensity;
     float shininess   = 64.0;
     float specStrength = 0.6;
 

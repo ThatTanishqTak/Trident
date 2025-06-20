@@ -88,6 +88,11 @@ namespace Engine
 		glUniform3fv(GetUniformLocation(name), 1, glm::value_ptr(value));
 	}
 
+	void OpenGLShader::SetUniformFloat(const std::string& name, float value)
+	{
+		glUniform1f(GetUniformLocation(name), value);
+	}
+
 	void OpenGLShader::SetUniformMat4(const std::string& name, const glm::mat4& matrix)
 	{
 		glUniformMatrix4fv(GetUniformLocation(name), 1, GL_FALSE, glm::value_ptr(matrix));

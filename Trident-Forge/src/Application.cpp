@@ -178,6 +178,8 @@ void Application::RenderScene()
     m_Shader->SetUniformMat4("u_ViewProjection", l_ViewProj);
 
     m_Shader->SetUniformFloat3("u_LightPos", m_LightPosition);
+    m_Shader->SetUniformFloat3("u_LightColor", m_LightColor);
+    m_Shader->SetUniformFloat("u_LightIntensity", m_LightIntensity);
     m_Shader->SetUniformFloat3("u_ViewPos", m_CameraPosition);
 
     Engine::RenderCommand::DrawIndexed(m_VertexArray);
