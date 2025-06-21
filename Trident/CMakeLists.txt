@@ -11,10 +11,16 @@ target_include_directories(glad PUBLIC
   ${CMAKE_CURRENT_SOURCE_DIR}/vendor/glad/include
 )
 
-# Add GLM (header-only math library)
+# Add GLM
 add_library(glm INTERFACE)
 target_include_directories(glm INTERFACE
   ${CMAKE_CURRENT_SOURCE_DIR}/vendor/glm
+)
+
+# Add EnTT 
+add_library(entt INTERFACE)
+target_include_directories(entt INTERFACE
+  ${CMAKE_CURRENT_SOURCE_DIR}/vendor/entt/src
 )
 
 # Gather all source and header files from the engine
@@ -31,7 +37,7 @@ target_include_directories(Trident PUBLIC
   ${CMAKE_CURRENT_SOURCE_DIR}/src
 )
 
-# Add ImGui as a static library (UI library)
+# Add ImGui as a static library
 set(IMGUI_DIR "${CMAKE_CURRENT_SOURCE_DIR}/vendor/imgui")
 file(GLOB IMGUI_SOURCES
     ${IMGUI_DIR}/*.cpp
@@ -48,6 +54,7 @@ target_link_libraries(Trident PUBLIC
     glad
     glfw
     glm
+    entt
     opengl32
     ImGui
 )

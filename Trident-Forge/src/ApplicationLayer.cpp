@@ -2,6 +2,9 @@
 
 #include "Renderer/RenderCommand.h"
 
+#include "ECS/Scene.h"
+#include "ECS/Components.h"
+
 ApplicationLayer::ApplicationLayer(const std::shared_ptr<Engine::Framebuffer>& framebuffer, const std::shared_ptr<Engine::CameraController>& cameraController,
     const std::shared_ptr<Engine::WindowsWindow>& window, int& width, int& height) : 
     m_SceneFramebuffer(framebuffer), m_CameraController(cameraController), m_Window(window), m_Width(width), m_Height(height)
@@ -77,6 +80,10 @@ void ApplicationLayer::Init()
 
     m_Shader = Engine::Shader::Create("Assets/Shaders/Basic.vert", "Assets/Shaders/Basic.frag");
 
+    m_CubeEntity = m_Scene.CreateEntity();
+    m_Scene.AddComponent<Engine::TagComponent>(m_CubeEntity, "Cube");
+    m_Scene.AddComponent<Engine::TransformComponent>(m_CubeEntity);
+
     m_CameraPosition = m_CameraController->GetCamera().GetPosition();
 }
 
@@ -106,11 +113,13 @@ void ApplicationLayer::RenderScene()
     m_CameraPosition = m_CameraController->GetCamera().GetPosition();
     m_Shader->Bind();
 
-    glm::mat4 model = glm::translate(glm::mat4(1.0f), m_CubePosition)
-        * glm::rotate(glm::mat4(1.0f), glm::radians(m_CubeRotation.x), glm::vec3(1.0f, 0.0f, 0.0f))
-        * glm::rotate(glm::mat4(1.0f), glm::radians(m_CubeRotation.y), glm::vec3(0.0f, 1.0f, 0.0f))
-        * glm::rotate(glm::mat4(1.0f), glm::radians(m_CubeRotation.z), glm::vec3(0.0f, 0.0f, 1.0f))
-        * glm::scale(glm::mat4(1.0f), m_CubeScale);
+    auto& transform = m_Scene.GetComponent<Engine::TransformComponent>(m_CubeEntity);
+
+    glm::mat4 model = glm::translate(glm::mat4(1.0f), transform.Translation)
+        * glm::rotate(glm::mat4(1.0f), glm::radians(transform.Rotation.x), glm::vec3(1.0f, 0.0f, 0.0f))
+        * glm::rotate(glm::mat4(1.0f), glm::radians(transform.Rotation.y), glm::vec3(0.0f, 1.0f, 0.0f))
+        * glm::rotate(glm::mat4(1.0f), glm::radians(transform.Rotation.z), glm::vec3(0.0f, 0.0f, 1.0f))
+        * glm::scale(glm::mat4(1.0f), transform.Scale);
 
     glm::mat4 viewProj = m_CameraController->GetCamera().GetViewProjectionMatrix();
 
@@ -227,9 +236,10 @@ void ApplicationLayer::RenderUI()
         ImGui::Spacing();
         ImGui::Text("Cube Properties");
         ImGui::Separator();
-        ImGui::DragFloat3("Position", &m_CubePosition.x, 0.1f);
-        ImGui::DragFloat3("Scale", &m_CubeScale.x, 0.1f);
-        ImGui::DragFloat3("Rotation", &m_CubeRotation.x, 1.0f);
+        auto& transform = m_Scene.GetComponent<Engine::TransformComponent>(m_CubeEntity);
+        ImGui::DragFloat3("Position", &transform.Translation.x, 0.1f);
+        ImGui::DragFloat3("Scale", &transform.Scale.x, 0.1f);
+        ImGui::DragFloat3("Rotation", &transform.Rotation.x, 1.0f);
 
         ImGui::Spacing();
         ImGui::Text("Light Properties");

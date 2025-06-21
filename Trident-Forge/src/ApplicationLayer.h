@@ -2,6 +2,9 @@
 
 #include <Core.h>
 
+#include "ECS/Scene.h"
+#include "ECS/Components.h"
+
 class ApplicationLayer
 {
 public:
@@ -22,8 +25,8 @@ private:
     std::shared_ptr<Engine::Shader> m_Shader;
 
     glm::vec3 m_CubePosition{ 0.0f };
-    glm::vec3 m_CubeScale{ 1.0f };
-    glm::vec3 m_CubeRotation{ 0.0f };
+    Engine::Scene m_Scene;
+    Engine::Entity m_CubeEntity{ Engine::kInvalidEntity };
 
     glm::vec3 m_LightPosition{ 2.0f, 4.0f, 2.0f };
     glm::vec3 m_LightColor{ 1.0f };
@@ -35,5 +38,4 @@ private:
     int& m_Height;
 
 private:
-    void SetCameraPosition(const glm::vec3& position);
 };

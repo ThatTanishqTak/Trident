@@ -37,3 +37,6 @@
 #include "ImGui/ImGuiLayer.h"
 
 #include "Utilities/Time.h"
+
+#include "ECS/Entity.h"
+#include "ECS/Registry.h"
