@@ -14,6 +14,8 @@ namespace Engine
         void OnScroll(float yOffset);
         void OnResize(float width, float height);
 
+        void SetCameraPosition(const glm::vec3& position);
+
         const PerspectiveCamera& GetCamera() const { return m_Camera; }
 
     private:

@@ -33,4 +33,7 @@ private:
 
     int& m_Width;
     int& m_Height;
+
+private:
+    void SetCameraPosition(const glm::vec3& position);
 };

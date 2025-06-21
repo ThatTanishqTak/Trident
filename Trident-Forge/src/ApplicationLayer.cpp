@@ -3,9 +3,8 @@
 #include "Renderer/RenderCommand.h"
 
 ApplicationLayer::ApplicationLayer(const std::shared_ptr<Engine::Framebuffer>& framebuffer, const std::shared_ptr<Engine::CameraController>& cameraController,
-                                   const std::shared_ptr<Engine::WindowsWindow>& window, int& width, int& height) : m_SceneFramebuffer(framebuffer), 
-                                                                                                                    m_CameraController(cameraController), m_Window(window),
-                                                                                                                    m_Width(width), m_Height(height)
+    const std::shared_ptr<Engine::WindowsWindow>& window, int& width, int& height) : 
+    m_SceneFramebuffer(framebuffer), m_CameraController(cameraController), m_Window(window), m_Width(width), m_Height(height)
 {
 
 }
@@ -94,7 +93,7 @@ void ApplicationLayer::OnEvent(Engine::Event& e)
         return false;
     });
 
-    dispatcher.Dispatch<Engine::MouseScrolledEvent>([this](Engine::MouseScrolledEvent& /*ev*/)
+    dispatcher.Dispatch<Engine::MouseScrolledEvent>([this](Engine::MouseScrolledEvent&  ev)
     {
         m_CameraController->OnScroll(0.5f);
         
@@ -243,6 +242,7 @@ void ApplicationLayer::RenderUI()
         ImGui::Text("Camera Properties");
         ImGui::Separator();
         ImGui::DragFloat3("Camera Position", &m_CameraPosition.x, 0.1f);
+        m_CameraController->SetCameraPosition(m_CameraPosition);
     }
     ImGui::End();
 }

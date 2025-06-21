@@ -73,4 +73,9 @@ namespace Engine
         m_AspectRatio = wideltaTimeh / height;
         m_Camera = PerspectiveCamera(45.0f, m_AspectRatio, 0.1f, 100.0f);
     }
+
+    void CameraController::SetCameraPosition(const glm::vec3& position)
+    {
+        m_Camera.SetPosition(position);
+    }
 }
