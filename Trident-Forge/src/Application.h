@@ -2,6 +2,8 @@
 
 #include <Core.h>
 
+#include "ApplicationLayer.h"
+
 class Application
 {
 public:
@@ -27,25 +29,11 @@ private:
     std::shared_ptr<Engine::Renderer> m_Renderer;
     std::shared_ptr<Engine::Framebuffer> m_SceneFramebuffer;
     std::shared_ptr<Engine::RenderPass> m_RenderPass;
-    std::shared_ptr<Engine::VertexArray> m_VertexArray;
-    std::shared_ptr<Engine::Shader> m_Shader;
-
     std::shared_ptr<Engine::CameraController> m_CameraController;
+
     std::unique_ptr<Engine::ImGuiLayer> m_ImGuiLayer;
+    std::unique_ptr<ApplicationLayer> m_AppLayer;
 
     int m_Width = 1920;
     int m_Height = 1080;
-
-    // Cube transformation properties
-    glm::vec3 m_CubePosition = glm::vec3(0.0f);
-    glm::vec3 m_CubeScale = glm::vec3(1.0f);
-    glm::vec3 m_CubeRotation = glm::vec3(0.0f); // Rotation in degrees for X, Y, Z
-
-    // Lighting properties
-    glm::vec3 m_LightPosition = glm::vec3(1.2f, 1.0f, 2.0f);
-    glm::vec3 m_LightColor = glm::vec3(1.0f); // White light
-    float m_LightIntensity = 1.0f;
-
-    // Camera properties
-    glm::vec3 m_CameraPosition;
 };
