@@ -15,11 +15,6 @@ Application::~Application()
     Shutdown();
 }
 
-Application& Application::Get()
-{
-    return *s_Instance;
-}
-
 void Application::Run()
 {
     while (!glfwWindowShouldClose(m_Window->GetWindow()))
@@ -72,7 +67,6 @@ void Application::Init()
 
     float aspect = (float)m_Window->GetWidth() / (float)m_Window->GetHeight();
     m_CameraController = std::make_shared<Engine::CameraController>(aspect);
-    m_Camera = std::make_unique<Engine::PerspectiveCamera>(m_CameraController->GetCamera());
 
     m_ImGuiLayer = std::make_unique<Engine::ImGuiLayer>();
     m_ImGuiLayer->Init(m_Window->GetWindow());
@@ -159,11 +153,12 @@ void Application::Init()
     m_CubeRotation = { 0.0f, 0.0f, 0.0f };
     m_LightPosition = { 2.0f, 4.0f, 2.0f };
 
-    m_CameraPosition = m_Camera->GetPosition();
+    m_CameraPosition = m_CameraController->GetCamera().GetPosition();
 }
 
 void Application::RenderScene()
 {
+    m_CameraPosition = m_CameraController->GetCamera().GetPosition();
     m_Shader->Bind();
 
     glm::mat4 l_Model = glm::translate(glm::mat4(1.0f), m_CubePosition)
@@ -172,7 +167,7 @@ void Application::RenderScene()
         * glm::rotate(glm::mat4(1.0f), glm::radians(m_CubeRotation.z), glm::vec3(0.0f, 0.0f, 1.0f))
         * glm::scale(glm::mat4(1.0f), m_CubeScale);
 
-    glm::mat4 l_ViewProj = m_Camera->GetViewProjectionMatrix();
+    glm::mat4 l_ViewProj = m_CameraController->GetCamera().GetViewProjectionMatrix();
 
     m_Shader->SetUniformMat4("u_Model", l_Model);
     m_Shader->SetUniformMat4("u_ViewProjection", l_ViewProj);

@@ -8,7 +8,7 @@ public:
     Application();
     ~Application();
 
-    static Application& Get();
+    static Application& Get() { return *s_Instance; };
     void Run();
 
 private:
@@ -31,8 +31,6 @@ private:
     std::shared_ptr<Engine::Shader> m_Shader;
 
     std::shared_ptr<Engine::CameraController> m_CameraController;
-    std::unique_ptr<Engine::PerspectiveCamera> m_Camera;
-
     std::unique_ptr<Engine::ImGuiLayer> m_ImGuiLayer;
 
     int m_Width = 1920;

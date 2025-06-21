@@ -39,7 +39,7 @@
 
 ### Prerequisites
 
-- C++20 compatible compiler (tested with MSVC)
+- C++17 compatible compiler (tested with MSVC)
 - [CMake](https://cmake.org/) version 3.22 or newer
 - Git
 - OpenGL-compatible graphics drivers
