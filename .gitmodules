@@ -11,3 +11,6 @@
 [submodule "Trident/vendor/stb"]
 	path = Trident/vendor/stb
 	url = https://github.com/ThatTanishqTak/stb.git
+[submodule "Trident/vendor/entt"]
+	path = Trident/vendor/entt
+	url = https://github.com/ThatTanishqTak/entt.git
