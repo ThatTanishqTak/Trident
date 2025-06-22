@@ -27,6 +27,7 @@
 #include "Renderer/VertexArray.h"
 #include "Renderer/Framebuffer.h"
 #include "Renderer/Shader.h"
+#include "Renderer/Renderer3D.h"
 #include "Renderer/RenderPass.h"
 #include "Renderer/OpenGL/OpenGLRenderPass.h"
 

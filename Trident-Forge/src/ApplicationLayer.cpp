@@ -1,6 +1,6 @@
 ﻿#include "ApplicationLayer.h"
 
-#include "Renderer/RenderCommand.h"
+#include "Renderer/Renderer3D.h"
 
 #include "ECS/Scene.h"
 #include "ECS/Components.h"
@@ -14,71 +14,7 @@ ApplicationLayer::ApplicationLayer(const std::shared_ptr<Engine::Framebuffer>& f
 
 void ApplicationLayer::Init()
 {
-    float vertices[] =
-    {
-        // Back face (−Z)
-       -0.5f, -0.5f, -0.5f,  1.0f, 0.0f, 0.0f, 1.0f,   0.0f,  0.0f, -1.0f,
-        0.5f, -0.5f, -0.5f,  0.0f, 1.0f, 0.0f, 1.0f,   0.0f,  0.0f, -1.0f,
-        0.5f,  0.5f, -0.5f,  0.0f, 0.0f, 1.0f, 1.0f,   0.0f,  0.0f, -1.0f,
-       -0.5f,  0.5f, -0.5f,  1.0f, 1.0f, 0.0f, 1.0f,   0.0f,  0.0f, -1.0f,
-
-       // Front face (+Z)
-      -0.5f, -0.5f,  0.5f,  1.0f, 0.0f, 1.0f, 1.0f,   0.0f,  0.0f,  1.0f,
-       0.5f, -0.5f,  0.5f,  0.0f, 1.0f, 1.0f, 1.0f,   0.0f,  0.0f,  1.0f,
-       0.5f,  0.5f,  0.5f,  1.0f, 1.0f, 1.0f, 1.0f,   0.0f,  0.0f,  1.0f,
-      -0.5f,  0.5f,  0.5f,  0.5f, 0.5f, 0.5f, 1.0f,   0.0f,  0.0f,  1.0f,
-
-      // Left face (−X)
-     -0.5f, -0.5f,  0.5f,  1.0f, 0.0f, 1.0f, 1.0f,  -1.0f,  0.0f,  0.0f,
-     -0.5f, -0.5f, -0.5f,  1.0f, 0.0f, 0.0f, 1.0f,  -1.0f,  0.0f,  0.0f,
-     -0.5f,  0.5f, -0.5f,  1.0f, 1.0f, 0.0f, 1.0f,  -1.0f,  0.0f,  0.0f,
-     -0.5f,  0.5f,  0.5f,  0.5f, 0.5f, 0.5f, 1.0f,  -1.0f,  0.0f,  0.0f,
-
-     // Right face (+X)
-     0.5f, -0.5f, -0.5f,  0.0f, 1.0f, 0.0f, 1.0f,   1.0f,  0.0f,  0.0f,
-     0.5f, -0.5f,  0.5f,  0.0f, 1.0f, 1.0f, 1.0f,   1.0f,  0.0f,  0.0f,
-     0.5f,  0.5f,  0.5f,  1.0f, 1.0f, 1.0f, 1.0f,   1.0f,  0.0f,  0.0f,
-     0.5f,  0.5f, -0.5f,  0.0f, 0.0f, 1.0f, 1.0f,   1.0f,  0.0f,  0.0f,
-
-        // Bottom face (−Y)
-       -0.5f, -0.5f, -0.5f,  1.0f, 0.0f, 0.0f, 1.0f,   0.0f, -1.0f,  0.0f,
-        0.5f, -0.5f, -0.5f,  0.0f, 1.0f, 0.0f, 1.0f,   0.0f, -1.0f,  0.0f,
-        0.5f, -0.5f,  0.5f,  0.0f, 1.0f, 1.0f, 1.0f,   0.0f, -1.0f,  0.0f,
-       -0.5f, -0.5f,  0.5f,  1.0f, 0.0f, 1.0f, 1.0f,   0.0f, -1.0f,  0.0f,
-
-        // Top face (+Y)
-       -0.5f,  0.5f, -0.5f,  1.0f, 1.0f, 0.0f, 1.0f,   0.0f,  1.0f,  0.0f,
-        0.5f,  0.5f, -0.5f,  0.0f, 0.0f, 1.0f, 1.0f,   0.0f,  1.0f,  0.0f,
-        0.5f,  0.5f,  0.5f,  1.0f, 1.0f, 1.0f, 1.0f,   0.0f,  1.0f,  0.0f,
-       -0.5f,  0.5f,  0.5f,  0.5f, 0.5f, 0.5f, 1.0f,   0.0f,  1.0f,  0.0f,
-    };
-
-    uint32_t indices[] =
-    {
-         0,  1,  2,  2,  3,  0,
-         4,  5,  6,  6,  7,  4,
-         8,  9, 10, 10, 11,  8,
-        12, 13, 14, 14, 15, 12,
-        16, 17, 18, 18, 19, 16,
-        20, 21, 22, 22, 23, 20
-    };
-
-    auto vertexBuffer = Engine::VertexBuffer::Create(vertices, sizeof(vertices));
-    Engine::BufferLayout layout =
-    {
-        { Engine::ShaderDataType::Float3, "a_Position" },
-        { Engine::ShaderDataType::Float4, "a_Color"    },
-        { Engine::ShaderDataType::Float3, "a_Normal"   }
-    };
-    vertexBuffer->SetLayout(layout);
-
-    auto indexBuffer = Engine::IndexBuffer::Create(indices, sizeof(indices) / sizeof(uint32_t));
-
-    m_VertexArray = Engine::VertexArray::Create();
-    m_VertexArray->AddVertexBuffer(vertexBuffer);
-    m_VertexArray->SetIndexBuffer(indexBuffer);
-
-    m_Shader = Engine::Shader::Create("Assets/Shaders/Basic.vert", "Assets/Shaders/Basic.frag");
+    Engine::Renderer3D::Init();
 
     m_CubeEntity = m_Scene.CreateEntity();
     m_Scene.AddComponent<Engine::TagComponent>(m_CubeEntity, "Cube");
@@ -111,7 +47,6 @@ void ApplicationLayer::OnEvent(Engine::Event& e)
 void ApplicationLayer::RenderScene()
 {
     m_CameraPosition = m_CameraController->GetCamera().GetPosition();
-    m_Shader->Bind();
 
     auto& transform = m_Scene.GetComponent<Engine::TransformComponent>(m_CubeEntity);
 
@@ -123,15 +58,7 @@ void ApplicationLayer::RenderScene()
 
     glm::mat4 viewProj = m_CameraController->GetCamera().GetViewProjectionMatrix();
 
-    m_Shader->SetUniformMat4("u_Model", model);
-    m_Shader->SetUniformMat4("u_ViewProjection", viewProj);
-
-    m_Shader->SetUniformFloat3("u_LightPos", m_LightPosition);
-    m_Shader->SetUniformFloat3("u_LightColor", m_LightColor);
-    m_Shader->SetUniformFloat("u_LightIntensity", m_LightIntensity);
-    m_Shader->SetUniformFloat3("u_ViewPos", m_CameraPosition);
-
-    Engine::RenderCommand::DrawIndexed(m_VertexArray);
+    Engine::Renderer3D::DrawCube(model, viewProj, m_LightPosition, m_LightColor, m_LightIntensity, m_CameraPosition);
 }
 
 void ApplicationLayer::RenderUI()
@@ -202,25 +129,11 @@ void ApplicationLayer::RenderUI()
             ImGui::EndMenu();
         }
 
-        if (ImGui::BeginMenu("View"))
-        {
-            if (ImGui::MenuItem("Scene", nullptr, true))
-            {
-
-            }
-
-            if (ImGui::MenuItem("Console", nullptr, true))
-            {
-
-            }
-            ImGui::EndMenu();
-        }
-
         if (ImGui::BeginMenu("Help"))
         {
             if (ImGui::MenuItem("About"))
             {
-                
+                ImGui::TextLink("About");
             }
             ImGui::EndMenu();
         }
@@ -240,6 +153,9 @@ void ApplicationLayer::RenderUI()
         ImGui::DragFloat3("Position", &transform.Translation.x, 0.1f);
         ImGui::DragFloat3("Scale", &transform.Scale.x, 0.1f);
         ImGui::DragFloat3("Rotation", &transform.Rotation.x, 1.0f);
+        //auto& color = m_Scene.GetComponent<Engine::ColorComponent>(m_CubeEntity);
+        //ImGui::ColorEdit3("Color", &color.Color.x, 0.1f);
+        //ImGui::DragFloat("Alpha", &color.Alpha, 0.1f, 0.0f, 1.0f);
 
         ImGui::Spacing();
         ImGui::Text("Light Properties");

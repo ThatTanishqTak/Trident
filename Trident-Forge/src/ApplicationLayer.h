@@ -21,9 +21,6 @@ private:
     std::shared_ptr<Engine::CameraController> m_CameraController;
     std::shared_ptr<Engine::WindowsWindow> m_Window;
 
-    std::shared_ptr<Engine::VertexArray> m_VertexArray;
-    std::shared_ptr<Engine::Shader> m_Shader;
-
     glm::vec3 m_CubePosition{ 0.0f };
     Engine::Scene m_Scene;
     Engine::Entity m_CubeEntity{ Engine::kInvalidEntity };
