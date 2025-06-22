@@ -31,6 +31,8 @@ private:
 
     glm::vec3 m_CameraPosition{ 0.0f };
 
+    glm::vec4 m_Color{ 1.0f };
+
     int& m_Width;
     int& m_Height;
 };

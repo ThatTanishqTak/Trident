@@ -68,9 +68,9 @@ namespace Engine
         // Optional: zoom functionality
     }
 
-    void CameraController::OnResize(float wideltaTimeh, float height)
+    void CameraController::OnResize(float width, float height)
     {
-        m_AspectRatio = wideltaTimeh / height;
+        m_AspectRatio = width / height;
         m_Camera = PerspectiveCamera(45.0f, m_AspectRatio, 0.1f, 100.0f);
     }
 

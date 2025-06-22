@@ -39,11 +39,6 @@ if (MSVC)
     )
 endif()
 
-# MSVC-specific object file directory for Forge
-target_compile_options(Trident-Forge PRIVATE
-    $<$<CXX_COMPILER_ID:MSVC>:/Fo"${CMAKE_SOURCE_DIR}/bin-int/${OUTPUT_DIR}/Trident-Forge/">
-)
-
 # Set binary output paths for Forge
 set_target_properties(Trident-Forge PROPERTIES
     RUNTIME_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR}/bin/${OUTPUT_DIR}

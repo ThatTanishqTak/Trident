@@ -58,8 +58,3 @@ target_link_libraries(Trident PUBLIC
     opengl32
     ImGui
 )
-
-# Set MSVC-specific object file output directory
-target_compile_options(Trident PRIVATE
-  $<$<CXX_COMPILER_ID:MSVC>:/Fo"${CMAKE_SOURCE_DIR}/bin-int/${OUTPUT_DIR}/Trident/">
-)

@@ -57,7 +57,6 @@ void ApplicationLayer::RenderScene()
         * glm::scale(glm::mat4(1.0f), transform.Scale);
 
     glm::mat4 viewProj = m_CameraController->GetCamera().GetViewProjectionMatrix();
-
     Engine::Renderer3D::DrawCube(model, viewProj, m_LightPosition, m_LightColor, m_LightIntensity, m_CameraPosition);
 }
 
@@ -125,15 +124,6 @@ void ApplicationLayer::RenderUI()
             if (ImGui::MenuItem("Paste", "Ctrl+V"))
             {
 
-            }
-            ImGui::EndMenu();
-        }
-
-        if (ImGui::BeginMenu("Help"))
-        {
-            if (ImGui::MenuItem("About"))
-            {
-                ImGui::TextLink("About");
             }
             ImGui::EndMenu();
         }
