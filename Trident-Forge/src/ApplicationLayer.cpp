@@ -17,8 +17,8 @@ void ApplicationLayer::Init()
     Engine::Renderer3D::Init();
 
     m_CubeEntity = m_Scene.CreateEntity();
-    m_Scene.AddComponent<Engine::TagComponent>(m_CubeEntity, "Cube");
-    m_Scene.AddComponent<Engine::TransformComponent>(m_CubeEntity);
+    m_CubeEntity.AddComponent<Engine::TagComponent>("Cube");
+    m_CubeEntity.AddComponent<Engine::TransformComponent>();
 
     m_CameraPosition = m_CameraController->GetCamera().GetPosition();
 }
@@ -48,7 +48,7 @@ void ApplicationLayer::RenderScene()
 {
     m_CameraPosition = m_CameraController->GetCamera().GetPosition();
 
-    auto& transform = m_Scene.GetComponent<Engine::TransformComponent>(m_CubeEntity);
+    auto& transform = m_CubeEntity.GetComponent<Engine::TransformComponent>();
 
     glm::mat4 model = glm::translate(glm::mat4(1.0f), transform.Translation)
         * glm::rotate(glm::mat4(1.0f), glm::radians(transform.Rotation.x), glm::vec3(1.0f, 0.0f, 0.0f))
@@ -139,7 +139,7 @@ void ApplicationLayer::RenderUI()
         ImGui::Spacing();
         ImGui::Text("Cube Properties");
         ImGui::Separator();
-        auto& transform = m_Scene.GetComponent<Engine::TransformComponent>(m_CubeEntity);
+        auto& transform = m_CubeEntity.GetComponent<Engine::TransformComponent>();
         ImGui::DragFloat3("Position", &transform.Translation.x, 0.1f);
         ImGui::DragFloat3("Scale", &transform.Scale.x, 0.1f);
         ImGui::DragFloat3("Rotation", &transform.Rotation.x, 1.0f);

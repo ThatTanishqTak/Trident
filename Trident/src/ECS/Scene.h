@@ -33,6 +33,12 @@ namespace Engine
         }
 
         template<typename T>
+        const T& GetComponent(Entity entity) const
+        {
+            return m_Registry.GetComponent<T>(entity);
+        }
+
+        template<typename T>
         bool HasComponent(Entity entity) const
         {
             return m_Registry.HasComponent<T>(entity);
@@ -41,7 +47,19 @@ namespace Engine
         template<typename... Ts, typename Func>
         void ForEach(Func func)
         {
-            m_Registry.ForEach<Ts...>(std::move(func));
+            m_Registry.ForEach<Ts...>([this, &func](entt::entity entity, Ts&... comps)
+                {
+                    func(Entity(entity, this), comps...);
+                });
+        }
+
+        template<typename... Ts, typename Func>
+        void ForEach(Func func) const
+        {
+            m_Registry.ForEach<Ts...>([this, &func](entt::entity entity, const Ts&... comps)
+                {
+                    func(Entity(entity, const_cast<Scene*>(this)), comps...);
+                });
         }
 
     private:

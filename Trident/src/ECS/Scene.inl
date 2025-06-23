@@ -2,7 +2,8 @@ namespace Engine
 {
     inline Entity Scene::CreateEntity()
     {
-        return m_Registry.CreateEntity();
+        auto handle = m_Registry.CreateEntity();
+        return Entity(handle, this);
     }
 
     inline void Scene::DestroyEntity(Entity entity)

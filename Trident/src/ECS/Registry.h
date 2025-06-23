@@ -9,23 +9,29 @@ namespace Engine
 	class Registry
 	{
 	public:
-		Entity CreateEntity();
-		void DestroyEntity(Entity entity);
+		entt::entity CreateEntity();
+		void DestroyEntity(entt::entity entity);
 
 		template<typename T, typename... Args>
-		T& AddComponent(Entity entity, Args&&... args);
+		T& AddComponent(entt::entity entity, Args&&... args);
 
 		template<typename T>
-		void RemoveComponent(Entity entity);
+		void RemoveComponent(entt::entity entity);
 
 		template<typename T>
-		T& GetComponent(Entity entity);
+		T& GetComponent(entt::entity entity);
 
 		template<typename T>
-		bool HasComponent(Entity entity) const;
+		const T& GetComponent(entt::entity entity) const;
+
+		template<typename T>
+		bool HasComponent(entt::entity entity) const;
 
 		template<typename... Ts, typename Func>
 		void ForEach(Func func);
+
+		template<typename... Ts, typename Func>
+		void ForEach(Func func) const;
 
 	private:
 		entt::registry m_Registry;
@@ -33,38 +39,45 @@ namespace Engine
 }
 
 // ------------------ Implementation ------------------
+
 namespace Engine
 {
-	inline Entity Registry::CreateEntity()
+	inline entt::entity Registry::CreateEntity()
 	{
 		return m_Registry.create();
 	}
 
-	inline void Registry::DestroyEntity(Entity entity)
+	inline void Registry::DestroyEntity(entt::entity entity)
 	{
 		m_Registry.destroy(entity);
 	}
 
 	template<typename T, typename... Args>
-	T& Registry::AddComponent(Entity entity, Args&&... args)
+	T& Registry::AddComponent(entt::entity entity, Args&&... args)
 	{
 		return m_Registry.emplace<T>(entity, std::forward<Args>(args)...);
 	}
 
 	template<typename T>
-	void Registry::RemoveComponent(Entity entity)
+	void Registry::RemoveComponent(entt::entity entity)
 	{
 		m_Registry.remove<T>(entity);
 	}
 
 	template<typename T>
-	T& Registry::GetComponent(Entity entity)
+	T& Registry::GetComponent(entt::entity entity)
 	{
 		return m_Registry.get<T>(entity);
 	}
 
 	template<typename T>
-	bool Registry::HasComponent(Entity entity) const
+	const T& Registry::GetComponent(entt::entity entity) const
+	{
+		return m_Registry.get<T>(entity);
+	}
+
+	template<typename T>
+	bool Registry::HasComponent(entt::entity entity) const
 	{
 		return m_Registry.all_of<T>(entity);
 	}
@@ -74,6 +87,18 @@ namespace Engine
 	{
 		auto view = m_Registry.view<Ts...>();
 		for (auto entity : view)
+		{
 			func(entity, view.get<Ts>(entity)...);
+		}
+	}
+
+	template<typename... Ts, typename Func>
+	void Registry::ForEach(Func func) const
+	{
+		auto view = m_Registry.view<Ts...>();
+		for (auto entity : view)
+		{
+			func(entity, view.get<Ts>(entity)...);
+		}
 	}
 }

@@ -13,7 +13,7 @@
 ### Editor Viewport
 - Real-time scene rendering with a framebuffer-based viewport
 - ImGui integration for UI controls and tools
-- Support for an entity system (planned)
+- Minimal entity component system with `TagComponent` and `TransformComponent`
 
 ### Rendering System
 - OpenGL 4.3 core profile
@@ -24,6 +24,9 @@
 - **Trident** – core static library containing rendering, windowing, event handling, and physics systems
 - **Trident-Forge** – standalone level editor built on top of the engine
 - Modern CMake-based build system with organized binary and intermediate output directories
+
+The `Trident-Forge` editor demonstrates this ECS by spawning a cube entity with
+`TagComponent` and `TransformComponent`, allowing real-time property editing.
 
 ---
 
@@ -39,7 +42,7 @@
 
 ### Prerequisites
 
-- C++17 compatible compiler (tested with MSVC)
+- C++20 compatible compiler (tested with MSVC)
 - [CMake](https://cmake.org/) version 3.22 or newer
 - Git
 - OpenGL-compatible graphics drivers
