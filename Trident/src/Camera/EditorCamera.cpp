@@ -83,8 +83,6 @@ namespace Engine
         }
 
         UpdateView();
-
-        std::cout << "Camera Position: " << m_Position.x << ", " << m_Position.y << ", " << m_Position.z << std::endl;
     }
 
     void EditorCamera::OnMouseScroll(float delta)

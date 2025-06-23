@@ -22,4 +22,17 @@ namespace Engine
         glm::vec3 Color{ 1.0f };
         float Alpha{ 1.0f };
     };
+
+    enum class PrimitiveType
+    {
+        Cube = 0,
+        Sphere,
+        Quad,
+        Plane
+    };
+
+    struct PrimitiveComponent
+    {
+        PrimitiveType Type{ PrimitiveType::Cube };
+    };
 }

@@ -36,6 +36,9 @@ namespace Engine
 
         entt::entity GetHandle() const { return m_Entity; }
 
+        bool operator==(const Entity& other) const;
+        bool operator!=(const Entity& other) const;
+
     private:
         entt::entity m_Entity{ entt::null };
         Scene* m_Scene{ nullptr };
@@ -76,5 +79,15 @@ namespace Engine
     bool Entity::HasComponent() const
     {
         return m_Scene->HasComponent<T>(*this);
+    }
+
+    inline bool Entity::operator==(const Entity& other) const
+    {
+        return m_Entity == other.m_Entity && m_Scene == other.m_Scene;
+    }
+
+    inline bool Entity::operator!=(const Entity& other) const
+    {
+        return !(*this == other);
     }
 }

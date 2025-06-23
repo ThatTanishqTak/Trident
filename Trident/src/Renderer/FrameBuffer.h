@@ -9,7 +9,7 @@ namespace Engine
     {
         uint32_t Width = 1920;
         uint32_t Height = 1080;
-        glm::vec4 ClearColor = { 0.1f, 0.1f, 0.1f, 1.0f };
+        glm::vec4 ClearColor;
     };
 
     class Framebuffer

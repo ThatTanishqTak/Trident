@@ -12,6 +12,9 @@ namespace Engine
     public:
         EditorCamera(float fov, float aspectRatio, float nearClip, float farClip);
 
+        void SetPosition(const glm::vec3& position) { m_Position = position; UpdateView(); }
+        const glm::vec3& GetPosition() const { return m_Position; }
+
         void OnUpdate(float deltaTime);
         void OnMouseScroll(float delta);
         void OnMouseMove(float xOffset, float yOffset);
@@ -20,6 +23,8 @@ namespace Engine
         void SetViewportSize(float width, float height);
 
         const glm::mat4& GetViewMatrix() const { return m_ViewMatrix; }
+        const glm::mat4& GetProjectionMatrix() const override { return m_ProjectionMatrix; }
+        glm::mat4 GetViewProjectionMatrix() const override { return m_ViewProjectionMatrix; }
         const glm::mat4& GetViewProjection() const { return m_ViewProjectionMatrix; }
 
         void UpdateView();
