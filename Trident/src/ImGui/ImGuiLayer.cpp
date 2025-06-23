@@ -52,9 +52,11 @@ namespace Engine
                 ImGuiID dock_main_id = dockspace_id;
                 ImGuiID dock_id_left = ImGui::DockBuilderSplitNode(dock_main_id, ImGuiDir_Left, 0.75f, nullptr, &dock_main_id);
                 ImGuiID dock_id_right = dock_main_id;
+                ImGuiID dock_id_properties = ImGui::DockBuilderSplitNode(dock_id_right, ImGuiDir_Down, 0.5f, nullptr, &dock_id_right);
 
                 ImGui::DockBuilderDockWindow("Scene Viewport", dock_id_left);
                 ImGui::DockBuilderDockWindow("Settings", dock_id_right);
+                ImGui::DockBuilderDockWindow("Properties", dock_id_properties);
 
                 ImGui::DockBuilderFinish(dockspace_id);
             }

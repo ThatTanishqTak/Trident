@@ -1,9 +1,7 @@
 ﻿#include "ApplicationLayer.h"
 
 #include "Renderer/Renderer3D.h"
-
-#include "ECS/Scene.h"
-#include "ECS/Components.h"
+#include <GLFW/glfw3.h>
 
 ApplicationLayer::ApplicationLayer(const std::shared_ptr<Engine::Framebuffer>& framebuffer, const std::shared_ptr<Engine::CameraController>& cameraController,
     const std::shared_ptr<Engine::WindowsWindow>& window, int& width, int& height) : 
@@ -15,10 +13,6 @@ ApplicationLayer::ApplicationLayer(const std::shared_ptr<Engine::Framebuffer>& f
 void ApplicationLayer::Init()
 {
     Engine::Renderer3D::Init();
-
-    m_CubeEntity = m_Scene.CreateEntity();
-    m_CubeEntity.AddComponent<Engine::TagComponent>("Cube");
-    m_CubeEntity.AddComponent<Engine::TransformComponent>();
 
     m_CameraPosition = m_CameraController->GetCamera().GetPosition();
 }
@@ -36,9 +30,9 @@ void ApplicationLayer::OnEvent(Engine::Event& e)
         return false;
     });
 
-    dispatcher.Dispatch<Engine::MouseScrolledEvent>([this](Engine::MouseScrolledEvent&  ev)
+    dispatcher.Dispatch<Engine::MouseScrolledEvent>([this](Engine::MouseScrolledEvent& ev)
     {
-        m_CameraController->OnScroll(0.5f);
+        m_CameraController->OnScroll(ev.GetYOffset());
         
         return false;
     });
@@ -48,16 +42,18 @@ void ApplicationLayer::RenderScene()
 {
     m_CameraPosition = m_CameraController->GetCamera().GetPosition();
 
-    auto& transform = m_CubeEntity.GetComponent<Engine::TransformComponent>();
-
-    glm::mat4 model = glm::translate(glm::mat4(1.0f), transform.Translation)
-        * glm::rotate(glm::mat4(1.0f), glm::radians(transform.Rotation.x), glm::vec3(1.0f, 0.0f, 0.0f))
-        * glm::rotate(glm::mat4(1.0f), glm::radians(transform.Rotation.y), glm::vec3(0.0f, 1.0f, 0.0f))
-        * glm::rotate(glm::mat4(1.0f), glm::radians(transform.Rotation.z), glm::vec3(0.0f, 0.0f, 1.0f))
-        * glm::scale(glm::mat4(1.0f), transform.Scale);
-
     glm::mat4 viewProj = m_CameraController->GetCamera().GetViewProjectionMatrix();
-    Engine::Renderer3D::DrawCube(model, viewProj, m_LightPosition, m_LightColor, m_LightIntensity, m_CameraPosition);
+
+    m_Scene.ForEach<Engine::TransformComponent>([&](Engine::Entity entity, Engine::TransformComponent& transform)
+        {
+            glm::mat4 model = glm::translate(glm::mat4(1.0f), transform.Translation)
+                * glm::rotate(glm::mat4(1.0f), glm::radians(transform.Rotation.x), glm::vec3(1.0f, 0.0f, 0.0f))
+                * glm::rotate(glm::mat4(1.0f), glm::radians(transform.Rotation.y), glm::vec3(0.0f, 1.0f, 0.0f))
+                * glm::rotate(glm::mat4(1.0f), glm::radians(transform.Rotation.z), glm::vec3(0.0f, 0.0f, 1.0f))
+                * glm::scale(glm::mat4(1.0f), transform.Scale);
+            
+            Engine::Renderer3D::DrawCube(model, viewProj, m_LightPosition, m_LightColor, m_LightIntensity, m_CameraPosition);
+        });
 }
 
 void ApplicationLayer::RenderUI()
@@ -68,6 +64,22 @@ void ApplicationLayer::RenderUI()
         ImVec2 size = ImGui::GetContentRegionAvail();
 
         ImGui::Image(texID, size, ImVec2(0, 1), ImVec2(1, 0));
+
+        if (ImGui::BeginPopupContextWindow("SceneContext", ImGuiPopupFlags_MouseButtonRight | ImGuiPopupFlags_NoOpenOverItems))
+        {
+            if (ImGui::BeginMenu("Add"))
+            {
+                if (ImGui::MenuItem("Cube"))
+                {
+                    double mouseX, mouseY;
+                    glfwGetCursorPos(m_Window->GetWindow(), &mouseX, &mouseY);
+                    glm::vec3 worldPos = ScreenToWorld(static_cast<float>(mouseX), static_cast<float>(mouseY));
+                    m_SelectedEntity = SpawnCube(worldPos);
+                }
+                ImGui::EndMenu();
+            }
+            ImGui::EndPopup();
+        }
     }
     ImGui::End();
 
@@ -135,17 +147,23 @@ void ApplicationLayer::RenderUI()
         ImGui::Text("Performance");
         ImGui::Separator();
         ImGui::Text("FPS: %.1f", ImGui::GetIO().Framerate);
+    }
+    ImGui::End();
 
-        ImGui::Spacing();
-        ImGui::Text("Cube Properties");
-        ImGui::Separator();
-        auto& transform = m_CubeEntity.GetComponent<Engine::TransformComponent>();
-        ImGui::DragFloat3("Position", &transform.Translation.x, 0.1f);
-        ImGui::DragFloat3("Scale", &transform.Scale.x, 0.1f);
-        ImGui::DragFloat3("Rotation", &transform.Rotation.x, 1.0f);
-        //auto& color = m_Scene.GetComponent<Engine::ColorComponent>(m_CubeEntity);
-        //ImGui::ColorEdit3("Color", &color.Color.x, 0.1f);
-        //ImGui::DragFloat("Alpha", &color.Alpha, 0.1f, 0.0f, 1.0f);
+    ImGui::Begin("Properties");
+    {
+        if (m_SelectedEntity)
+        {
+            ImGui::Text("Cube Properties");
+            ImGui::Separator();
+            auto& transform = m_SelectedEntity.GetComponent<Engine::TransformComponent>();
+            ImGui::DragFloat3("Position", &transform.Translation.x, 0.1f);
+            ImGui::DragFloat3("Scale", &transform.Scale.x, 0.1f);
+            ImGui::DragFloat3("Rotation", &transform.Rotation.x, 1.0f);
+            //auto& color = m_Scene.GetComponent<Engine::ColorComponent>(m_SelectedEntity);
+            //ImGui::ColorEdit3("Color", &color.Color.x, 0.1f);
+            //ImGui::DragFloat("Alpha", &color.Alpha, 0.1f, 0.0f, 1.0f);
+        }
 
         ImGui::Spacing();
         ImGui::Text("Light Properties");
@@ -161,4 +179,26 @@ void ApplicationLayer::RenderUI()
         m_CameraController->SetCameraPosition(m_CameraPosition);
     }
     ImGui::End();
+}
+
+Engine::Entity ApplicationLayer::SpawnCube(const glm::vec3& position)
+{
+    Engine::Entity entity = m_Scene.CreateEntity();
+    entity.AddComponent<Engine::TagComponent>("Cube");
+    auto& tc = entity.AddComponent<Engine::TransformComponent>();
+    tc.Translation = position;
+    entity.AddComponent<Engine::ColorComponent>();
+
+    return entity;
+}
+
+glm::vec3 ApplicationLayer::ScreenToWorld(float mouseX, float mouseY) const
+{
+    glm::vec4 viewport{ 0.0f, 0.0f, static_cast<float>(m_Width), static_cast<float>(m_Height) };
+    glm::vec3 screenPos{ mouseX, static_cast<float>(m_Height) - mouseY, 0.0f };
+    glm::mat4 view = m_CameraController->GetCamera().GetViewMatrix();
+    glm::mat4 proj = m_CameraController->GetCamera().GetProjectionMatrix();
+    glm::vec3 world = glm::unProject(screenPos, view, proj, viewport);
+
+    return world;
 }

@@ -5,6 +5,8 @@
 #include "ECS/Scene.h"
 #include "ECS/Components.h"
 
+#include <glm/gtc/matrix_transform.hpp>
+
 class ApplicationLayer
 {
 public:
@@ -16,6 +18,9 @@ public:
     void RenderScene();
     void RenderUI();
 
+    Engine::Entity SpawnCube(const glm::vec3& position);
+    glm::vec3 ScreenToWorld(float mouseX, float mouseY) const;
+
 private:
     std::shared_ptr<Engine::Framebuffer> m_SceneFramebuffer;
     std::shared_ptr<Engine::CameraController> m_CameraController;
@@ -23,7 +28,7 @@ private:
 
     glm::vec3 m_CubePosition{ 0.0f };
     Engine::Scene m_Scene;
-    Engine::Entity m_CubeEntity{ Engine::kInvalidEntity };
+    Engine::Entity m_SelectedEntity{ Engine::kInvalidEntity };
 
     glm::vec3 m_LightPosition{ 2.0f, 4.0f, 2.0f };
     glm::vec3 m_LightColor{ 1.0f };
