@@ -12,7 +12,11 @@ namespace Engine
     public:
         EditorCamera(float fov, float aspectRatio, float nearClip, float farClip);
 
-        void SetPosition(const glm::vec3& position) { m_Position = position; UpdateView(); }
+        void SetPosition(const glm::vec3& position)
+        {
+            m_Position = position;
+            UpdateView();
+        }
         const glm::vec3& GetPosition() const { return m_Position; }
 
         void OnUpdate(float deltaTime);
@@ -29,7 +33,6 @@ namespace Engine
 
         void UpdateView();
         void UpdateProjection();
-    private:
 
     private:
         glm::vec3 m_Position = { 0.0f, 0.0f, 5.0f };
@@ -53,5 +56,4 @@ namespace Engine
 
         bool m_RightMousePressed = false;
     };
-
 }

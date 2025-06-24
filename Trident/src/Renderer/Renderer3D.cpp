@@ -1,8 +1,8 @@
 #include "Renderer3D.h"
 
 #include "Renderer/BufferLayout.h"
-#include "Renderer/VertexBuffer.h"
 #include "Renderer/IndexBuffer.h"
+#include "Renderer/VertexBuffer.h"
 
 #include "Geometry/Geometry.h"
 
@@ -27,12 +27,11 @@ namespace Engine
         s_Resources.Shader = Shader::Create("Assets/Shaders/Basic.vert", "Assets/Shaders/Basic.frag");
     }
 
-    void Renderer3D::Shutdown()
-    {
-        s_Resources.Shader.reset();
-    }
+    void Renderer3D::Shutdown() { s_Resources.Shader.reset(); }
 
-    void Renderer3D::DrawGeometry(const std::shared_ptr<VertexArray>& vao, const glm::mat4& model, const glm::mat4& viewProj, const glm::vec3& lightPos, const glm::vec3& lightColor, float lightIntensity, const glm::vec3& viewPos)
+    void Renderer3D::DrawGeometry(const std::shared_ptr<VertexArray>& vao, const glm::mat4& model,
+        const glm::mat4& viewProj, const glm::vec3& lightPos, const glm::vec3& lightColor,
+        float lightIntensity, const glm::vec3& viewPos)
     {
         if (!s_Resources.Shader)
         {

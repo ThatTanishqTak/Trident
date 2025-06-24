@@ -2,8 +2,9 @@
 
 #include <Core.h>
 
-#include "ECS/Scene.h"
 #include "ECS/Components.h"
+#include "ECS/Scene.h"
+
 #include "SceneHierarchyPanel.h"
 
 #include <glm/gtc/matrix_transform.hpp>
@@ -11,8 +12,9 @@
 class ApplicationLayer
 {
 public:
-    ApplicationLayer(const std::shared_ptr<Engine::Framebuffer>& framebuffer, const std::shared_ptr<Engine::EditorCamera>& camera,
-                     const std::shared_ptr<Engine::WindowsWindow>& window, int& width, int& height);
+    ApplicationLayer(const std::shared_ptr<Engine::Framebuffer>& framebuffer,
+        const std::shared_ptr<Engine::EditorCamera>& camera,
+        const std::shared_ptr<Engine::WindowsWindow>& window, int& width, int& height);
 
     void Init();
     void OnEvent(Engine::Event& e);

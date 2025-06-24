@@ -27,18 +27,9 @@ namespace Engine
         }
     }
 
-    float Time::GetTime()
-    {
-        return s_Time;
-    }
+    float Time::GetTime() { return s_Time; }
 
-    float Time::GetDeltaTime()
-    {
-        return s_DeltaTime;
-    }
+    float Time::GetDeltaTime() { return s_DeltaTime; }
 
-    float Time::GetFPS()
-    {
-        return s_FPS;
-    }
+    float Time::GetFPS() { return s_FPS; }
 }

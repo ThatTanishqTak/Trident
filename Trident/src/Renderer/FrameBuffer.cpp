@@ -1,6 +1,7 @@
 #include "Renderer/Framebuffer.h"
-#include "Renderer/RendererAPI.h"
 #include "OpenGL/OpenGLFramebuffer.h"
+
+#include "Renderer/RendererAPI.h"
 
 namespace Engine
 {
@@ -12,7 +13,7 @@ namespace Engine
             {
                 return nullptr;
             }
-            
+
             case RendererAPI::API::OpenGL:
             {
                 return std::make_shared<OpenGLFramebuffer>(spec);

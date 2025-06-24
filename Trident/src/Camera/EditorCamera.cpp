@@ -1,7 +1,7 @@
 #include "EditorCamera.h"
+
 #include <GLFW/glfw3.h>
 #include <glm/gtc/matrix_transform.hpp>
-#include <iostream>
 
 namespace Engine
 {
@@ -14,7 +14,7 @@ namespace Engine
     void EditorCamera::SetViewportSize(float width, float height)
     {
         m_AspectRatio = width / height;
-    
+
         UpdateProjection();
     }
 
@@ -72,6 +72,7 @@ namespace Engine
         {
             m_Position += right * speed;
         }
+
         if (glfwGetKey(window, GLFW_KEY_Q) == GLFW_PRESS)
         {
             m_Position -= up * speed;
@@ -88,7 +89,7 @@ namespace Engine
     void EditorCamera::OnMouseScroll(float delta)
     {
         m_Position += m_Direction * delta * 0.5f;
-    
+
         UpdateView();
     }
 
@@ -119,8 +120,15 @@ namespace Engine
         m_Pitch += yOffset;
 
         // Constrain pitch
-        if (m_Pitch > 89.0f) m_Pitch = 89.0f;
-        if (m_Pitch < -89.0f) m_Pitch = -89.0f;
+        if (m_Pitch > 89.0f)
+        {
+            m_Pitch = 89.0f;
+        }
+        
+        if (m_Pitch < -89.0f)
+        {
+            m_Pitch = -89.0f;
+        }
 
         UpdateView();
     }
@@ -133,14 +141,14 @@ namespace Engine
             {
                 m_RightMousePressed = true;
                 m_FirstMouse = true;
-            
+
                 glfwSetInputMode(glfwGetCurrentContext(), GLFW_CURSOR, GLFW_CURSOR_DISABLED);
             }
 
             else if (action == GLFW_RELEASE)
             {
                 m_RightMousePressed = false;
-                
+
                 glfwSetInputMode(glfwGetCurrentContext(), GLFW_CURSOR, GLFW_CURSOR_NORMAL);
             }
         }

@@ -2,10 +2,7 @@
 
 #include <imgui.h>
 
-SceneHierarchyPanel::SceneHierarchyPanel(Engine::Scene* scene)
-{
-    SetContext(scene);
-}
+SceneHierarchyPanel::SceneHierarchyPanel(Engine::Scene* scene) { SetContext(scene); }
 
 void SceneHierarchyPanel::SetContext(Engine::Scene* scene)
 {
@@ -19,8 +16,8 @@ void SceneHierarchyPanel::OnImGuiRender()
     if (m_Context)
     {
         m_Context->ForEach<Engine::TagComponent>([&](Engine::Entity entity, Engine::TagComponent& tag)
-            {
-                DrawEntityNode(entity);
+            { 
+                DrawEntityNode(entity); 
             });
 
         if (ImGui::IsMouseDown(0) && ImGui::IsWindowHovered())

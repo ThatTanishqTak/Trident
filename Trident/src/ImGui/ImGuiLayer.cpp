@@ -9,7 +9,8 @@ namespace Engine
         IMGUI_CHECKVERSION();
         ImGui::CreateContext();
 
-        ImGuiIO& io = ImGui::GetIO(); (void)io;
+        ImGuiIO& io = ImGui::GetIO();
+        (void)io;
         io.Fonts->AddFontFromFileTTF("Assets/Fonts/JetBrainsMonoNerdFont-Regular.ttf", 18.0f);
 
         io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;

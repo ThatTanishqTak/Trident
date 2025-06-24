@@ -1,10 +1,11 @@
 #include "Geometry.h"
-#include "Renderer/VertexBuffer.h"
-#include "Renderer/IndexBuffer.h"
-#include "Renderer/BufferLayout.h"
 
-#include <vector>
+#include "Renderer/BufferLayout.h"
+#include "Renderer/IndexBuffer.h"
+#include "Renderer/VertexBuffer.h"
+
 #include <cmath>
+#include <vector>
 
 namespace Engine
 {
@@ -21,18 +22,21 @@ namespace Engine
         static std::shared_ptr<VertexArray> CreateGeometry(const std::vector<float>& vertices, const std::vector<uint32_t>& indices)
         {
             auto vertexBuffer = VertexBuffer::Create(const_cast<float*>(vertices.data()), static_cast<uint32_t>(vertices.size() * sizeof(float)));
-            BufferLayout layout = {
-                { ShaderDataType::Float3, "a_Position" },
-                { ShaderDataType::Float4, "a_Color"    },
-                { ShaderDataType::Float3, "a_Normal"   }
+            BufferLayout layout =
+            { 
+                {ShaderDataType::Float3, "a_Position"},
+                {ShaderDataType::Float4, "a_Color"},
+                {ShaderDataType::Float3, "a_Normal"} 
             };
             vertexBuffer->SetLayout(layout);
 
-            auto indexBuffer = IndexBuffer::Create(const_cast<uint32_t*>(indices.data()), static_cast<uint32_t>(indices.size()));
+            auto indexBuffer =
+                IndexBuffer::Create(const_cast<uint32_t*>(indices.data()), static_cast<uint32_t>(indices.size()));
 
             auto vao = VertexArray::Create();
             vao->AddVertexBuffer(vertexBuffer);
             vao->SetIndexBuffer(indexBuffer);
+            
             return vao;
         }
 
@@ -43,46 +47,32 @@ namespace Engine
                 return;
             }
 
-            float verts[] = {
+            float verts[] =
+            {
                 // Back face
-               -0.5f, -0.5f, -0.5f, 1.f, 1.f, 1.f, 1.f, 0.f, 0.f, -1.f,
-                0.5f, -0.5f, -0.5f, 1.f, 1.f, 1.f, 1.f, 0.f, 0.f, -1.f,
-                0.5f,  0.5f, -0.5f, 1.f, 1.f, 1.f, 1.f, 0.f, 0.f, -1.f,
-               -0.5f,  0.5f, -0.5f, 1.f, 1.f, 1.f, 1.f, 0.f, 0.f, -1.f,
-               // Front face
-               -0.5f, -0.5f,  0.5f, 1.f, 1.f, 1.f, 1.f, 0.f, 0.f, 1.f,
-                0.5f, -0.5f,  0.5f, 1.f, 1.f, 1.f, 1.f, 0.f, 0.f, 1.f,
-                0.5f,  0.5f,  0.5f, 1.f, 1.f, 1.f, 1.f, 0.f, 0.f, 1.f,
-               -0.5f,  0.5f,  0.5f, 1.f, 1.f, 1.f, 1.f, 0.f, 0.f, 1.f,
-               // Left face
-               -0.5f, -0.5f,  0.5f, 1.f, 1.f, 1.f, 1.f, -1.f, 0.f, 0.f,
-               -0.5f, -0.5f, -0.5f, 1.f, 1.f, 1.f, 1.f, -1.f, 0.f, 0.f,
-               -0.5f,  0.5f, -0.5f, 1.f, 1.f, 1.f, 1.f, -1.f, 0.f, 0.f,
-               -0.5f,  0.5f,  0.5f, 1.f, 1.f, 1.f, 1.f, -1.f, 0.f, 0.f,
-               // Right face
-                0.5f, -0.5f, -0.5f, 1.f, 1.f, 1.f, 1.f, 1.f, 0.f, 0.f,
-                0.5f, -0.5f,  0.5f, 1.f, 1.f, 1.f, 1.f, 1.f, 0.f, 0.f,
-                0.5f,  0.5f,  0.5f, 1.f, 1.f, 1.f, 1.f, 1.f, 0.f, 0.f,
-                0.5f,  0.5f, -0.5f, 1.f, 1.f, 1.f, 1.f, 1.f, 0.f, 0.f,
+                -0.5f, -0.5f, -0.5f, 1.f, 1.f, 1.f, 1.f, 0.f, 0.f, -1.f, 0.5f, -0.5f, -0.5f, 1.f, 1.f, 1.f, 1.f, 0.f, 0.f, -1.f,
+                0.5f, 0.5f, -0.5f, 1.f, 1.f, 1.f, 1.f, 0.f, 0.f, -1.f, -0.5f, 0.5f, -0.5f, 1.f, 1.f, 1.f, 1.f, 0.f, 0.f, -1.f,
+                // Front face
+                -0.5f, -0.5f, 0.5f, 1.f, 1.f, 1.f, 1.f, 0.f, 0.f, 1.f, 0.5f, -0.5f, 0.5f, 1.f, 1.f, 1.f, 1.f, 0.f, 0.f, 1.f,
+                0.5f, 0.5f, 0.5f, 1.f, 1.f, 1.f, 1.f, 0.f, 0.f, 1.f, -0.5f, 0.5f, 0.5f, 1.f, 1.f, 1.f, 1.f, 0.f, 0.f, 1.f,
+                // Left face
+                -0.5f, -0.5f, 0.5f, 1.f, 1.f, 1.f, 1.f, -1.f, 0.f, 0.f, -0.5f, -0.5f, -0.5f, 1.f, 1.f, 1.f, 1.f, -1.f, 0.f, 0.f,
+                -0.5f, 0.5f, -0.5f, 1.f, 1.f, 1.f, 1.f, -1.f, 0.f, 0.f, -0.5f, 0.5f, 0.5f, 1.f, 1.f, 1.f, 1.f, -1.f, 0.f, 0.f,
+                // Right face
+                0.5f, -0.5f, -0.5f, 1.f, 1.f, 1.f, 1.f, 1.f, 0.f, 0.f, 0.5f, -0.5f, 0.5f, 1.f, 1.f, 1.f, 1.f, 1.f, 0.f, 0.f,
+                0.5f, 0.5f, 0.5f, 1.f, 1.f, 1.f, 1.f, 1.f, 0.f, 0.f, 0.5f, 0.5f, -0.5f, 1.f, 1.f, 1.f, 1.f, 1.f, 0.f, 0.f,
                 // Bottom face
-                -0.5f, -0.5f, -0.5f, 1.f, 1.f, 1.f, 1.f, 0.f, -1.f, 0.f,
-                 0.5f, -0.5f, -0.5f, 1.f, 1.f, 1.f, 1.f, 0.f, -1.f, 0.f,
-                 0.5f, -0.5f,  0.5f, 1.f, 1.f, 1.f, 1.f, 0.f, -1.f, 0.f,
-                -0.5f, -0.5f,  0.5f, 1.f, 1.f, 1.f, 1.f, 0.f, -1.f, 0.f,
+                -0.5f, -0.5f, -0.5f, 1.f, 1.f, 1.f, 1.f, 0.f, -1.f, 0.f, 0.5f, -0.5f, -0.5f, 1.f, 1.f, 1.f, 1.f, 0.f, -1.f, 0.f,
+                0.5f, -0.5f, 0.5f, 1.f, 1.f, 1.f, 1.f, 0.f, -1.f, 0.f, -0.5f, -0.5f, 0.5f, 1.f, 1.f, 1.f, 1.f, 0.f, -1.f, 0.f,
                 // Top face
-                -0.5f,  0.5f, -0.5f, 1.f, 1.f, 1.f, 1.f, 0.f, 1.f, 0.f,
-                 0.5f,  0.5f, -0.5f, 1.f, 1.f, 1.f, 1.f, 0.f, 1.f, 0.f,
-                 0.5f,  0.5f,  0.5f, 1.f, 1.f, 1.f, 1.f, 0.f, 1.f, 0.f,
-                -0.5f,  0.5f,  0.5f, 1.f, 1.f, 1.f, 1.f, 0.f, 1.f, 0.f
+                -0.5f, 0.5f, -0.5f, 1.f, 1.f, 1.f, 1.f, 0.f, 1.f, 0.f, 0.5f, 0.5f, -0.5f, 1.f, 1.f, 1.f, 1.f, 0.f, 1.f, 0.f,
+                0.5f, 0.5f, 0.5f, 1.f, 1.f, 1.f, 1.f, 0.f, 1.f, 0.f, -0.5f, 0.5f, 0.5f, 1.f, 1.f, 1.f, 1.f, 0.f, 1.f, 0.f
             };
 
-            uint32_t ind[] = {
-                 0,  1,  2,  2,  3,  0,
-                 4,  5,  6,  6,  7,  4,
-                 8,  9, 10, 10, 11,  8,
-                12, 13, 14, 14, 15, 12,
-                16, 17, 18, 18, 19, 16,
-                20, 21, 22, 22, 23, 20
+            uint32_t ind[] =
+            { 
+                0,  1,  2,  2,  3,  0,  4,  5,  6,  6,  7,  4,  8,  9,  10, 10, 11, 8,
+                12, 13, 14, 14, 15, 12, 16, 17, 18, 18, 19, 16, 20, 21, 22, 22, 23, 20 
             };
 
             std::vector<float> v(std::begin(verts), std::end(verts));
@@ -93,13 +83,15 @@ namespace Engine
         static void BuildQuad()
         {
             if (s_Geometries.Quad)
+            {
                 return;
+            }
 
-            float verts[] = {
-               -0.5f, -0.5f, 0.f, 1.f, 0.f, 0.f, 1.f, 0.f, 0.f, 1.f,
-                0.5f, -0.5f, 0.f, 0.f, 1.f, 0.f, 1.f, 0.f, 0.f, 1.f,
-                0.5f,  0.5f, 0.f, 0.f, 0.f, 1.f, 1.f, 0.f, 0.f, 1.f,
-               -0.5f,  0.5f, 0.f, 1.f, 1.f, 1.f, 1.f, 0.f, 0.f, 1.f
+            float verts[] =
+            {
+                -0.5f, -0.5f,  0.0f,   1.0f,  0.0f, 0.f, 1.f,  0.f,  0.f, 1.f, 0.5f, -0.5f, 0.f, 0.f,
+                 1.0f,  0.0f,  1.0f,   0.0f,  0.0f, 1.f, 0.5f, 0.5f, 0.f, 0.f, 0.f,  1.f,   1.f, 0.f,
+                 0.0f,  1.0f, -0.5f,   0.5f,  0.0f, 1.f, 1.f,  1.f,  1.f, 0.f, 0.f,  1.f 
             };
 
             uint32_t ind[] = { 0, 1, 2, 2, 3, 0 };
@@ -112,13 +104,15 @@ namespace Engine
         static void BuildPlane()
         {
             if (s_Geometries.Plane)
+            {
                 return;
+            }
 
-            float verts[] = {
-               -0.5f, 0.f, -0.5f, 1.f, 0.f, 0.f, 1.f, 0.f, 1.f, 0.f,
-                0.5f, 0.f, -0.5f, 0.f, 1.f, 0.f, 1.f, 0.f, 1.f, 0.f,
-                0.5f, 0.f,  0.5f, 0.f, 0.f, 1.f, 1.f, 0.f, 1.f, 0.f,
-               -0.5f, 0.f,  0.5f, 1.f, 1.f, 1.f, 1.f, 0.f, 1.f, 0.f
+            float verts[] =
+            { 
+                -0.5f, 0.f, -0.5f, 1.f, 0.f,  0.f, 1.f,  0.f, 1.f,  0.f, 0.5f, 0.f, -0.5f, 0.f,
+                1.f,   0.f, 1.f,   0.f, 1.f,  0.f, 0.5f, 0.f, 0.5f, 0.f, 0.f,  1.f, 1.f,   0.f,
+                1.f,   0.f, -0.5f, 0.f, 0.5f, 1.f, 1.f,  1.f, 1.f,  0.f, 1.f,  0.f
             };
 
             uint32_t ind[] = { 0, 1, 2, 2, 3, 0 };
@@ -131,12 +125,16 @@ namespace Engine
         static void BuildSphere()
         {
             if (s_Geometries.Sphere)
+            {
                 return;
+            }
 
             const unsigned int segments = 20;
             const unsigned int rings = 20;
+            
             std::vector<float> vertices;
             std::vector<uint32_t> indices;
+
             for (unsigned int y = 0; y <= rings; ++y)
             {
                 for (unsigned int x = 0; x <= segments; ++x)
@@ -189,24 +187,28 @@ namespace Engine
     const std::shared_ptr<VertexArray>& Geometry::GetCube()
     {
         BuildCube();
+        
         return s_Geometries.Cube;
     }
 
     const std::shared_ptr<VertexArray>& Geometry::GetSphere()
     {
         BuildSphere();
+        
         return s_Geometries.Sphere;
     }
 
     const std::shared_ptr<VertexArray>& Geometry::GetQuad()
     {
         BuildQuad();
+        
         return s_Geometries.Quad;
     }
 
     const std::shared_ptr<VertexArray>& Geometry::GetPlane()
     {
         BuildPlane();
+        
         return s_Geometries.Plane;
     }
 

@@ -5,7 +5,7 @@ namespace Engine
     PerspectiveCamera::PerspectiveCamera(float fov, float aspectRatio, float nearClip, float farClip)
     {
         m_ProjectionMatrix = glm::perspective(glm::radians(fov), aspectRatio, nearClip, farClip);
-        
+
         RecalculateView();
     }
 
@@ -38,8 +38,5 @@ namespace Engine
         m_ViewMatrix = glm::lookAt(m_Position, m_Position + m_Front, m_Up);
     }
 
-    glm::mat4 PerspectiveCamera::GetViewProjectionMatrix() const
-    {
-        return m_ProjectionMatrix * m_ViewMatrix;
-    }
+    glm::mat4 PerspectiveCamera::GetViewProjectionMatrix() const { return m_ProjectionMatrix * m_ViewMatrix; }
 }

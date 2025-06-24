@@ -1,14 +1,15 @@
 #pragma once
 
 #include "Camera.h"
+
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 
 namespace Engine
 {
-	class PerspectiveCamera : public Camera
-	{
-	public:
+    class PerspectiveCamera : public Camera
+    {
+    public:
         PerspectiveCamera(float fov, float aspectRatio, float nearClip, float farClip);
 
         void SetPosition(const glm::vec3& position);
@@ -35,5 +36,5 @@ namespace Engine
         glm::vec3 m_Front;
         glm::vec3 m_Up;
         glm::vec3 m_Right;
-	};
+    };
 }

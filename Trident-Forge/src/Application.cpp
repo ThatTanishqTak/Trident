@@ -1,22 +1,16 @@
 ﻿#include "Application.h"
 #include <GLFW/glfw3.h>
 
-#include "Renderer/RenderCommand.h"
 #include "Renderer/OpenGL/OpenGLRenderPass.h"
+#include "Renderer/RenderCommand.h"
 
 #include "ApplicationLayer.h"
 
 Application* Application::s_Instance = nullptr;
 
-Application::Application()
-{
-    Init();
-}
+Application::Application() { Init(); }
 
-Application::~Application()
-{
-    Shutdown();
-}
+Application::~Application() { Shutdown(); }
 
 void Application::Run()
 {
@@ -31,9 +25,9 @@ void Application::Run()
         Engine::RenderCommand::Clear();
 
         Engine::Renderer::BeginScene(m_RenderPass);
-        
+
         RenderScene();
-        
+
         Engine::Renderer::EndScene();
         m_SceneFramebuffer->Unbind();
 
@@ -75,19 +69,22 @@ void Application::Init()
     m_EditorCamera->SetViewportSize((float)m_Window->GetWidth(), (float)m_Window->GetHeight());
 
     glfwSetWindowUserPointer(m_Window->GetWindow(), this);
-    glfwSetCursorPosCallback(m_Window->GetWindow(), [](GLFWwindow* window, double x, double y)
+    glfwSetCursorPosCallback(m_Window->GetWindow(),
+        [](GLFWwindow* window, double x, double y)
         {
             Application* app = static_cast<Application*>(glfwGetWindowUserPointer(window));
             if (app && app->m_EditorCamera)
                 app->m_EditorCamera->OnMouseMove(static_cast<float>(x), static_cast<float>(y));
         });
-    glfwSetScrollCallback(m_Window->GetWindow(), [](GLFWwindow* window, double xoff, double yoff)
+    glfwSetScrollCallback(m_Window->GetWindow(),
+        [](GLFWwindow* window, double xoff, double yoff)
         {
             Application* app = static_cast<Application*>(glfwGetWindowUserPointer(window));
             if (app && app->m_EditorCamera)
                 app->m_EditorCamera->OnMouseScroll(static_cast<float>(yoff));
         });
-    glfwSetMouseButtonCallback(m_Window->GetWindow(), [](GLFWwindow* window, int button, int action, int mods)
+    glfwSetMouseButtonCallback(m_Window->GetWindow(),
+        [](GLFWwindow* window, int button, int action, int mods)
         {
             Application* app = static_cast<Application*>(glfwGetWindowUserPointer(window));
             if (app && app->m_EditorCamera)
@@ -101,20 +98,11 @@ void Application::Init()
     m_AppLayer->Init();
 }
 
-void Application::RenderScene()
-{
-    m_AppLayer->RenderScene();
-}
+void Application::RenderScene() { m_AppLayer->RenderScene(); }
 
-void Application::OnEvent(Engine::Event& e)
-{
-    m_AppLayer->OnEvent(e);
-}
+void Application::OnEvent(Engine::Event& e) { m_AppLayer->OnEvent(e); }
 
-void Application::RenderUI()
-{
-    m_AppLayer->RenderUI();
-}
+void Application::RenderUI() { m_AppLayer->RenderUI(); }
 
 void Application::Shutdown()
 {

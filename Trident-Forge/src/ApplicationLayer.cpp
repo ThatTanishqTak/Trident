@@ -2,11 +2,13 @@
 
 #include "Renderer/Renderer3D.h"
 #include "SceneHierarchyPanel.h"
+
 #include <GLFW/glfw3.h>
 
-ApplicationLayer::ApplicationLayer(const std::shared_ptr<Engine::Framebuffer>& framebuffer, const std::shared_ptr<Engine::EditorCamera>& camera,
-    const std::shared_ptr<Engine::WindowsWindow>& window, int& width, int& height) :
-    m_SceneFramebuffer(framebuffer), m_Camera(camera), m_Window(window), m_Width(width), m_Height(height)
+ApplicationLayer::ApplicationLayer(const std::shared_ptr<Engine::Framebuffer> &framebuffer,
+    const std::shared_ptr<Engine::EditorCamera> &camera,
+    const std::shared_ptr<Engine::WindowsWindow> &window, int& width, int& height)
+    : m_SceneFramebuffer(framebuffer), m_Camera(camera), m_Window(window), m_Width(width), m_Height(height)
 {
 
 }
@@ -23,21 +25,21 @@ void ApplicationLayer::OnEvent(Engine::Event& e)
 {
     Engine::EventDispatcher dispatcher(e);
     dispatcher.Dispatch<Engine::WindowResizeEvent>([this](Engine::WindowResizeEvent& ev)
-    {
-        m_Width = ev.GetWidth();
-        m_Height = ev.GetHeight();
+        {
+            m_Width = ev.GetWidth();
+            m_Height = ev.GetHeight();
 
-        m_SceneFramebuffer->Resize(m_Width, m_Height);
-        
-        return false;
-    });
+            m_SceneFramebuffer->Resize(m_Width, m_Height);
+
+            return false;
+        });
 
     dispatcher.Dispatch<Engine::MouseScrolledEvent>([this](Engine::MouseScrolledEvent& ev)
-    {
-        m_Camera->OnMouseScroll(ev.GetYOffset());
-        
-        return false;
-    });
+        {
+            m_Camera->OnMouseScroll(ev.GetYOffset());
+
+            return false;
+        });
 }
 
 void ApplicationLayer::RenderScene()
@@ -48,26 +50,42 @@ void ApplicationLayer::RenderScene()
 
     m_Scene.ForEach<Engine::TransformComponent, Engine::PrimitiveComponent>([&](Engine::Entity entity, Engine::TransformComponent& transform, Engine::PrimitiveComponent& primitive)
         {
-            glm::mat4 model = glm::translate(glm::mat4(1.0f), transform.Translation)
-                * glm::rotate(glm::mat4(1.0f), glm::radians(transform.Rotation.x), glm::vec3(1.0f, 0.0f, 0.0f))
-                * glm::rotate(glm::mat4(1.0f), glm::radians(transform.Rotation.y), glm::vec3(0.0f, 1.0f, 0.0f))
-                * glm::rotate(glm::mat4(1.0f), glm::radians(transform.Rotation.z), glm::vec3(0.0f, 0.0f, 1.0f))
-                * glm::scale(glm::mat4(1.0f), transform.Scale);
-            
+            glm::mat4 model =
+                glm::translate(glm::mat4(1.0f), transform.Translation) *
+                glm::rotate(glm::mat4(1.0f), glm::radians(transform.Rotation.x), glm::vec3(1.0f, 0.0f, 0.0f)) *
+                glm::rotate(glm::mat4(1.0f), glm::radians(transform.Rotation.y), glm::vec3(0.0f, 1.0f, 0.0f)) *
+                glm::rotate(glm::mat4(1.0f), glm::radians(transform.Rotation.z), glm::vec3(0.0f, 0.0f, 1.0f)) *
+                glm::scale(glm::mat4(1.0f), transform.Scale);
+
             switch (primitive.Type)
             {
-            case Engine::PrimitiveType::Cube:
-                Engine::Renderer3D::DrawCube(model, viewProj, m_LightPosition, m_LightColor, m_LightIntensity, m_CameraPosition);
-                break;
-            case Engine::PrimitiveType::Sphere:
-                Engine::Renderer3D::DrawSphere(model, viewProj, m_LightPosition, m_LightColor, m_LightIntensity, m_CameraPosition);
-                break;
-            case Engine::PrimitiveType::Quad:
-                Engine::Renderer3D::DrawQuad(model, viewProj, m_LightPosition, m_LightColor, m_LightIntensity, m_CameraPosition);
-                break;
-            case Engine::PrimitiveType::Plane:
-                Engine::Renderer3D::DrawPlane(model, viewProj, m_LightPosition, m_LightColor, m_LightIntensity, m_CameraPosition);
-                break;
+                case Engine::PrimitiveType::Cube:
+                {
+                    Engine::Renderer3D::DrawCube(model, viewProj, m_LightPosition, m_LightColor, m_LightIntensity, m_CameraPosition);
+                    
+                    break;
+                }
+
+                case Engine::PrimitiveType::Sphere:
+                {
+                    Engine::Renderer3D::DrawSphere(model, viewProj, m_LightPosition, m_LightColor, m_LightIntensity, m_CameraPosition);
+                    
+                    break;
+                }
+
+                case Engine::PrimitiveType::Quad:
+                {
+                    Engine::Renderer3D::DrawQuad(model, viewProj, m_LightPosition, m_LightColor, m_LightIntensity, m_CameraPosition);
+                    
+                    break;
+                }
+
+                case Engine::PrimitiveType::Plane:
+                {
+                    Engine::Renderer3D::DrawPlane(model, viewProj, m_LightPosition, m_LightColor, m_LightIntensity, m_CameraPosition);
+                
+                    break;
+                }
             }
         });
 }
@@ -175,7 +193,7 @@ void ApplicationLayer::RenderUI()
         ImGui::Text("Performance");
         ImGui::Separator();
         ImGui::Text("FPS: %.1f", ImGui::GetIO().Framerate);
-        
+
         ImGui::Spacing();
         ImGui::Text("Light Properties");
         ImGui::Separator();
