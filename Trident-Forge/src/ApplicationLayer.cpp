@@ -23,7 +23,8 @@ void ApplicationLayer::Init()
     m_LightEntity.AddComponent<Engine::TagComponent>("Light");
     auto& lightTransform = m_LightEntity.AddComponent<Engine::TransformComponent>();
     lightTransform.Translation = { 2.0f, 4.0f, 2.0f };
-    m_LightEntity.AddComponent<Engine::LightComponent>();
+    auto& light = m_LightEntity.AddComponent<Engine::LightComponent>();
+    light.Type = Engine::LightType::Point;
     m_SceneHierarchyPanel.SetContext(&m_Scene);
 }
 
@@ -58,6 +59,10 @@ void ApplicationLayer::RenderScene()
     glm::vec3 lightPos = lightTransform.Translation;
     glm::vec3 lightColor = light.Color;
     float lightIntensity = light.Intensity;
+    glm::vec3 lightDir = light.Direction;
+    int lightType = static_cast<int>(light.Type);
+    float cutOff = light.CutOff;
+    float outerCutOff = light.OuterCutOff;
 
     m_Scene.ForEach<Engine::TransformComponent, Engine::PrimitiveComponent>([&](Engine::Entity entity, Engine::TransformComponent& transform, Engine::PrimitiveComponent& primitive)
         {
@@ -72,28 +77,32 @@ void ApplicationLayer::RenderScene()
             {
             case Engine::PrimitiveType::Cube:
             {
-                Engine::Renderer3D::DrawCube(model, viewProj, lightPos, lightColor, lightIntensity, m_CameraPosition);
+                Engine::Renderer3D::DrawCube(model, viewProj, lightPos, lightColor,
+                    lightIntensity, m_CameraPosition, lightDir, lightType, cutOff, outerCutOff);
 
                 break;
             }
 
             case Engine::PrimitiveType::Sphere:
             {
-                Engine::Renderer3D::DrawSphere(model, viewProj, lightPos, lightColor, lightIntensity, m_CameraPosition);
+                Engine::Renderer3D::DrawSphere(model, viewProj, lightPos, lightColor,
+                    lightIntensity, m_CameraPosition, lightDir, lightType, cutOff, outerCutOff);
 
                 break;
             }
 
             case Engine::PrimitiveType::Quad:
             {
-                Engine::Renderer3D::DrawQuad(model, viewProj, lightPos, lightColor, lightIntensity, m_CameraPosition);
+                Engine::Renderer3D::DrawQuad(model, viewProj, lightPos, lightColor,
+                    lightIntensity, m_CameraPosition, lightDir, lightType, cutOff, outerCutOff);
 
                 break;
             }
 
             case Engine::PrimitiveType::Plane:
             {
-                Engine::Renderer3D::DrawPlane(model, viewProj, lightPos, lightColor, lightIntensity, m_CameraPosition);
+                Engine::Renderer3D::DrawPlane(model, viewProj, lightPos, lightColor,
+                    lightIntensity, m_CameraPosition, lightDir, lightType, cutOff, outerCutOff);
 
                 break;
             }
@@ -218,6 +227,15 @@ void ApplicationLayer::RenderUI()
         ImGui::DragFloat3("Light Position", &lt.Translation.x, 0.1f);
         ImGui::ColorEdit3("Light Color", &lc.Color.x);
         ImGui::DragFloat("Light Intensity", &lc.Intensity, 0.05f, 0.0f, 10.0f);
+        const char* types[] = { "Directional", "Point", "Spot", "Area" };
+        int currentType = static_cast<int>(lc.Type);
+        if (ImGui::Combo("Light Type", &currentType, types, IM_ARRAYSIZE(types)))
+        {
+            lc.Type = static_cast<Engine::LightType>(currentType);
+        }
+        ImGui::DragFloat3("Light Direction", &lc.Direction.x, 0.1f);
+        ImGui::DragFloat("Cut Off", &lc.CutOff, 0.1f, 0.0f, 90.0f);
+        ImGui::DragFloat("Outer Cut Off", &lc.OuterCutOff, 0.1f, 0.0f, 90.0f);
 
         ImGui::Spacing();
         ImGui::Text("Camera Properties");
