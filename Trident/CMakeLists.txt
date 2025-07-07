@@ -23,6 +23,12 @@ target_include_directories(entt INTERFACE
   ${CMAKE_CURRENT_SOURCE_DIR}/vendor/entt/src
 )
 
+# Add stb_image
+add_library(stb INTERFACE)
+target_include_directories(stb INTERFACE
+  ${CMAKE_CURRENT_SOURCE_DIR}/vendor/stb
+)
+
 # Gather all source and header files from the engine
 file(GLOB_RECURSE TRIDENT_SOURCES CONFIGURE_DEPENDS src/*.cpp src/*.h)
 
@@ -56,5 +62,6 @@ target_link_libraries(Trident PUBLIC
     glm
     entt
     opengl32
+    stb
     ImGui
 )

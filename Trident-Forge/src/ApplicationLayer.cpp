@@ -1,6 +1,7 @@
 ﻿#include "ApplicationLayer.h"
 
 #include "Renderer/Renderer3D.h"
+#include "Renderer/Skybox.h"
 
 #include "SceneHierarchyPanel.h"
 #include "ContentBrowserPanel.h"
@@ -18,13 +19,21 @@ void ApplicationLayer::Init()
 {
     Engine::Renderer3D::Init();
 
+    std::array<std::string, 6> faces = { "Assets/Skyboxs/GreenSky.png",
+                                         "Assets/Skyboxs/GreenSky.png",
+                                         "Assets/Skyboxs/GreenSky.png",
+                                         "Assets/Skyboxs/GreenSky.png",
+                                         "Assets/Skyboxs/GreenSky.png",
+                                         "Assets/Skyboxs/GreenSky.png" };
+    Engine::Skybox::Init(faces);
+
     m_CameraPosition = m_Camera->GetPosition();
     m_LightEntity = m_Scene.CreateEntity();
     m_LightEntity.AddComponent<Engine::TagComponent>("Light");
     auto& lightTransform = m_LightEntity.AddComponent<Engine::TransformComponent>();
     lightTransform.Translation = { 2.0f, 4.0f, 2.0f };
     auto& light = m_LightEntity.AddComponent<Engine::LightComponent>();
-    light.Type = Engine::LightType::Point;
+    light.Type = Engine::LightType::Directional;
     m_SceneHierarchyPanel.SetContext(&m_Scene);
 }
 
@@ -54,6 +63,7 @@ void ApplicationLayer::RenderScene()
     m_CameraPosition = m_Camera->GetPosition();
 
     glm::mat4 viewProj = m_Camera->GetViewProjectionMatrix();
+    Engine::Skybox::Draw(m_Camera->GetViewMatrix(), m_Camera->GetProjectionMatrix());
     auto& lightTransform = m_LightEntity.GetComponent<Engine::TransformComponent>();
     auto& light = m_LightEntity.GetComponent<Engine::LightComponent>();
     glm::vec3 lightPos = lightTransform.Translation;
