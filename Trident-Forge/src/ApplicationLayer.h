@@ -6,6 +6,7 @@
 #include "ECS/Scene.h"
 
 #include "SceneHierarchyPanel.h"
+#include "ContentBrowserPanel.h"
 
 #include <glm/gtc/matrix_transform.hpp>
 
@@ -34,10 +35,9 @@ private:
     Engine::Scene m_Scene;
     Engine::Entity m_SelectedEntity{ Engine::kInvalidEntity };
     SceneHierarchyPanel m_SceneHierarchyPanel;
+    ContentBrowserPanel m_ContentBrowserPanel;
 
-    glm::vec3 m_LightPosition{ 2.0f, 4.0f, 2.0f };
-    glm::vec3 m_LightColor{ 1.0f };
-    float m_LightIntensity{ 1.0f };
+    Engine::Entity m_LightEntity{ Engine::kInvalidEntity };
 
     glm::vec3 m_CameraPosition{ 0.0f };
 

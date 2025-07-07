@@ -35,4 +35,15 @@ namespace Engine
     {
         PrimitiveType Type{ PrimitiveType::Cube };
     };
+
+    struct LightComponent
+    {
+        glm::vec3 Color{ 1.0f };
+        float Intensity{ 1.0f };
+    };
+
+    struct SpriteComponent
+    {
+        glm::vec4 Color{ 1.0f };
+    };
 }

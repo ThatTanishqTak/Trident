@@ -158,26 +158,21 @@ namespace Engine
                 }
             }
 
-            bool oddRow = false;
             for (unsigned int y = 0; y < rings; ++y)
             {
-                if (!oddRow)
+                for (unsigned int x = 0; x < segments; ++x)
                 {
-                    for (unsigned int x = 0; x <= segments; ++x)
-                    {
-                        indices.push_back(y * (segments + 1) + x);
-                        indices.push_back((y + 1) * (segments + 1) + x);
-                    }
+                    uint32_t first = y * (segments + 1) + x;
+                    uint32_t second = first + segments + 1;
+
+                    indices.push_back(first);
+                    indices.push_back(second);
+                    indices.push_back(first + 1);
+
+                    indices.push_back(second);
+                    indices.push_back(second + 1);
+                    indices.push_back(first + 1);
                 }
-                else
-                {
-                    for (int x = segments; x >= 0; --x)
-                    {
-                        indices.push_back((y + 1) * (segments + 1) + x);
-                        indices.push_back(y * (segments + 1) + x);
-                    }
-                }
-                oddRow = !oddRow;
             }
 
             s_Geometries.Sphere = CreateGeometry(vertices, indices);

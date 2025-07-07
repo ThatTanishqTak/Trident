@@ -1,14 +1,15 @@
 ﻿#include "ApplicationLayer.h"
 
 #include "Renderer/Renderer3D.h"
+
 #include "SceneHierarchyPanel.h"
+#include "ContentBrowserPanel.h"
 
 #include <GLFW/glfw3.h>
 
 ApplicationLayer::ApplicationLayer(const std::shared_ptr<Engine::Framebuffer> &framebuffer,
     const std::shared_ptr<Engine::EditorCamera> &camera,
-    const std::shared_ptr<Engine::WindowsWindow> &window, int& width, int& height)
-    : m_SceneFramebuffer(framebuffer), m_Camera(camera), m_Window(window), m_Width(width), m_Height(height)
+    const std::shared_ptr<Engine::WindowsWindow> &window, int& width, int& height) : m_SceneFramebuffer(framebuffer), m_Camera(camera), m_Window(window), m_Width(width), m_Height(height)
 {
 
 }
@@ -18,6 +19,11 @@ void ApplicationLayer::Init()
     Engine::Renderer3D::Init();
 
     m_CameraPosition = m_Camera->GetPosition();
+    m_LightEntity = m_Scene.CreateEntity();
+    m_LightEntity.AddComponent<Engine::TagComponent>("Light");
+    auto& lightTransform = m_LightEntity.AddComponent<Engine::TransformComponent>();
+    lightTransform.Translation = { 2.0f, 4.0f, 2.0f };
+    m_LightEntity.AddComponent<Engine::LightComponent>();
     m_SceneHierarchyPanel.SetContext(&m_Scene);
 }
 
@@ -47,6 +53,11 @@ void ApplicationLayer::RenderScene()
     m_CameraPosition = m_Camera->GetPosition();
 
     glm::mat4 viewProj = m_Camera->GetViewProjectionMatrix();
+    auto& lightTransform = m_LightEntity.GetComponent<Engine::TransformComponent>();
+    auto& light = m_LightEntity.GetComponent<Engine::LightComponent>();
+    glm::vec3 lightPos = lightTransform.Translation;
+    glm::vec3 lightColor = light.Color;
+    float lightIntensity = light.Intensity;
 
     m_Scene.ForEach<Engine::TransformComponent, Engine::PrimitiveComponent>([&](Engine::Entity entity, Engine::TransformComponent& transform, Engine::PrimitiveComponent& primitive)
         {
@@ -59,33 +70,33 @@ void ApplicationLayer::RenderScene()
 
             switch (primitive.Type)
             {
-                case Engine::PrimitiveType::Cube:
-                {
-                    Engine::Renderer3D::DrawCube(model, viewProj, m_LightPosition, m_LightColor, m_LightIntensity, m_CameraPosition);
-                    
-                    break;
-                }
+            case Engine::PrimitiveType::Cube:
+            {
+                Engine::Renderer3D::DrawCube(model, viewProj, lightPos, lightColor, lightIntensity, m_CameraPosition);
 
-                case Engine::PrimitiveType::Sphere:
-                {
-                    Engine::Renderer3D::DrawSphere(model, viewProj, m_LightPosition, m_LightColor, m_LightIntensity, m_CameraPosition);
-                    
-                    break;
-                }
+                break;
+            }
 
-                case Engine::PrimitiveType::Quad:
-                {
-                    Engine::Renderer3D::DrawQuad(model, viewProj, m_LightPosition, m_LightColor, m_LightIntensity, m_CameraPosition);
-                    
-                    break;
-                }
+            case Engine::PrimitiveType::Sphere:
+            {
+                Engine::Renderer3D::DrawSphere(model, viewProj, lightPos, lightColor, lightIntensity, m_CameraPosition);
 
-                case Engine::PrimitiveType::Plane:
-                {
-                    Engine::Renderer3D::DrawPlane(model, viewProj, m_LightPosition, m_LightColor, m_LightIntensity, m_CameraPosition);
-                
-                    break;
-                }
+                break;
+            }
+
+            case Engine::PrimitiveType::Quad:
+            {
+                Engine::Renderer3D::DrawQuad(model, viewProj, lightPos, lightColor, lightIntensity, m_CameraPosition);
+
+                break;
+            }
+
+            case Engine::PrimitiveType::Plane:
+            {
+                Engine::Renderer3D::DrawPlane(model, viewProj, lightPos, lightColor, lightIntensity, m_CameraPosition);
+
+                break;
+            }
             }
         });
 }
@@ -105,7 +116,9 @@ void ApplicationLayer::RenderUI()
             {
                 if (ImGui::MenuItem("Cube"))
                 {
-                    double mouseX, mouseY;
+                    double mouseX;
+                    double mouseY;
+                    
                     glfwGetCursorPos(m_Window->GetWindow(), &mouseX, &mouseY);
                     glm::vec3 worldPos = ScreenToWorld(static_cast<float>(mouseX), static_cast<float>(mouseY));
                     m_SelectedEntity = SpawnCube(worldPos);
@@ -113,7 +126,9 @@ void ApplicationLayer::RenderUI()
 
                 if (ImGui::MenuItem("Sphere"))
                 {
-                    double mouseX, mouseY;
+                    double mouseX;
+                    double mouseY;
+                    
                     glfwGetCursorPos(m_Window->GetWindow(), &mouseX, &mouseY);
                     glm::vec3 worldPos = ScreenToWorld(static_cast<float>(mouseX), static_cast<float>(mouseY));
                     m_SelectedEntity = SpawnSphere(worldPos);
@@ -128,6 +143,7 @@ void ApplicationLayer::RenderUI()
 
     m_SceneHierarchyPanel.OnImGuiRender();
     m_SelectedEntity = m_SceneHierarchyPanel.GetSelectedEntity();
+    m_ContentBrowserPanel.OnImGuiRender();
 
     if (ImGui::BeginMainMenuBar())
     {
@@ -197,9 +213,11 @@ void ApplicationLayer::RenderUI()
         ImGui::Spacing();
         ImGui::Text("Light Properties");
         ImGui::Separator();
-        ImGui::DragFloat3("Light Position", &m_LightPosition.x, 0.1f);
-        ImGui::ColorEdit3("Light Color", &m_LightColor.x);
-        ImGui::DragFloat("Light Intensity", &m_LightIntensity, 0.05f, 0.0f, 10.0f);
+        auto& lt = m_LightEntity.GetComponent<Engine::TransformComponent>();
+        auto& lc = m_LightEntity.GetComponent<Engine::LightComponent>();
+        ImGui::DragFloat3("Light Position", &lt.Translation.x, 0.1f);
+        ImGui::ColorEdit3("Light Color", &lc.Color.x);
+        ImGui::DragFloat("Light Intensity", &lc.Intensity, 0.05f, 0.0f, 10.0f);
 
         ImGui::Spacing();
         ImGui::Text("Camera Properties");
