@@ -26,6 +26,12 @@ public:
     Engine::Entity SpawnSphere(const glm::vec3& position);
     glm::vec3 ScreenToWorld(float mouseX, float mouseY) const;
 
+    // The editor and runtime can use this accessor to wire systems, including the
+    // new physics stepper, without breaking the layer encapsulation. Returning a
+    // reference keeps ownership inside the layer but gives callers full access.
+    Engine::Scene& GetScene() { return m_Scene; }
+    const Engine::Scene& GetScene() const { return m_Scene; }
+
 private:
     std::shared_ptr<Engine::Framebuffer> m_SceneFramebuffer;
     std::shared_ptr<Engine::EditorCamera> m_Camera;

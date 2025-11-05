@@ -17,7 +17,16 @@ void Application::Run()
     while (!glfwWindowShouldClose(m_Window->GetWindow()))
     {
         Engine::Time::Update();
-        m_EditorCamera->OnUpdate(Engine::Time::GetDeltaTime());
+        const float l_DeltaTime = Engine::Time::GetDeltaTime();
+
+        if (m_PhysicsSystem)
+        {
+            // Advancing physics before the camera update guarantees that view-projection
+            // matrices observe the most recent world transforms, avoiding one-frame lag.
+            m_PhysicsSystem->Step(l_DeltaTime);
+        }
+
+        m_EditorCamera->OnUpdate(l_DeltaTime);
         glfwPollEvents();
 
         m_SceneFramebuffer->Bind();
@@ -96,6 +105,10 @@ void Application::Init()
 
     m_AppLayer = std::make_unique<ApplicationLayer>(m_SceneFramebuffer, m_EditorCamera, m_Window, m_Width, m_Height);
     m_AppLayer->Init();
+
+    // PhysicsSystem taps into the scene maintained by the application layer so that
+    // editor and runtime builds share identical integration code paths.
+    m_PhysicsSystem = std::make_unique<Engine::PhysicsSystem>(m_AppLayer->GetScene());
 }
 
 void Application::RenderScene() { m_AppLayer->RenderScene(); }

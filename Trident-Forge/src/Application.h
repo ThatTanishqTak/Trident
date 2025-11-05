@@ -31,6 +31,8 @@ private:
     std::shared_ptr<Engine::RenderPass> m_RenderPass;
     std::shared_ptr<Engine::EditorCamera> m_EditorCamera;
 
+    std::unique_ptr<Engine::PhysicsSystem> m_PhysicsSystem; // Drives scene integration before rendering.
+
     std::unique_ptr<Engine::ImGuiLayer> m_ImGuiLayer;
     std::unique_ptr<ApplicationLayer> m_AppLayer;
 

@@ -60,6 +60,9 @@ void ApplicationLayer::OnEvent(Engine::Event& e)
 
 void ApplicationLayer::RenderScene()
 {
+    // The transform data accessed below has already been updated by PhysicsSystem::Step,
+    // so rendered meshes reflect the most recent simulation results before any camera
+    // matrices are evaluated.
     m_CameraPosition = m_Camera->GetPosition();
 
     glm::mat4 viewProj = m_Camera->GetViewProjectionMatrix();
@@ -87,6 +90,7 @@ void ApplicationLayer::RenderScene()
             {
             case Engine::PrimitiveType::Cube:
             {
+                // TODO: Once collision volumes exist we can highlight contact points here to aid debugging.
                 Engine::Renderer3D::DrawCube(model, viewProj, lightPos, lightColor,
                     lightIntensity, m_CameraPosition, lightDir, lightType, cutOff, outerCutOff);
 

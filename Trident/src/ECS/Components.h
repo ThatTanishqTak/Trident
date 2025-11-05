@@ -36,6 +36,19 @@ namespace Engine
         PrimitiveType Type{ PrimitiveType::Cube };
     };
 
+    // A lightweight physics component that stores the mass properties required by
+    // Engine::PhysicsSystem. The values follow the naming convention requested by
+    // the tooling team so that future contributors immediately know which scope
+    // owns the data. Additional state (forces, torque, collision volumes, etc.) can
+    // be bolted on here later without breaking the API surface.
+    struct RigidBodyComponent
+    {
+        float m_Mass{ 1.0f };                 // Kilogram mass used to scale applied accelerations.
+        glm::vec3 m_Velocity{ 0.0f };         // Linear velocity integrated every frame.
+        glm::vec3 m_Acceleration{ 0.0f };     // Accumulated acceleration (e.g., gravity or forces).
+        float m_Damping{ 0.0f };              // Linear damping factor in the [0, 1] range.
+    };
+
     enum class LightType
     {
         Directional = 0,

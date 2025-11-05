@@ -43,3 +43,4 @@
 
 #include "ECS/Entity.h"
 #include "ECS/Registry.h"
+#include "Physics/PhysicsSystem.h"
